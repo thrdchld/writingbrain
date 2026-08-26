@@ -607,73 +607,47 @@
         <!-- ===================================================================== -->
         <!-- VIEW 6: BRAINSTORMING PARTNER WORKSPACE -->
         <!-- ===================================================================== -->
-        <section id="view-brainstorm" class="hidden flex-1 flex flex-row min-h-0 bg-white relative">
+        <section id="view-brainstorm" class="hidden flex-1 flex flex-row min-h-0 bg-white relative overflow-hidden">
             
-            <!-- Left Session History Sidebar (260px Desktop · Drawer Mobile) -->
-            <aside id="bs-sidebar" class="fixed md:static inset-y-0 left-0 z-20 w-[260px] md:w-[260px] bg-brand-bg/40 border-r border-brand-primary/15 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-200 flex-shrink-0">
-                <div class="flex flex-col flex-1 min-h-0">
-                    <div class="p-3 border-b border-brand-primary/15 flex justify-between items-center bg-white">
-                        <span class="font-bold text-xs text-brand-primary">Riwayat Diskusi</span>
-                        <button onclick="UI.toggleBsHistory(false)" class="md:hidden text-brand-muted p-1">✕</button>
-                    </div>
-
-                    <div class="p-2.5">
-                        <button onclick="Brainstorm.createNewSession()" class="w-full btn-primary py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5">
-                            <span>+ Percakapan Baru</span>
-                        </button>
-                    </div>
-
-                    <div class="px-2.5 mb-2">
-                        <input type="text" id="bs-search-history" placeholder="Cari..." class="w-full p-1.5 text-xs border border-brand-primary/25 rounded-lg bg-white focus:outline-none focus:border-brand-primary" onkeyup="BrainstormUI.renderHistoryList()">
-                    </div>
-
-                    <div id="bs-history-list" class="flex-1 overflow-y-auto p-2 space-y-1 text-xs">
-                        <!-- Injected via JS -->
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Mobile Backdrop for Brainstorm History -->
-            <div id="bs-history-overlay" onclick="UI.toggleBsHistory(false)" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
-
-            <!-- Right Main Chat Desk -->
+            <!-- CENTER: Main Chat Desk (Primary Workspace) -->
             <div class="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
                 
                 <!-- Chat Session Header -->
-                <div class="h-12 border-b border-brand-primary/15 px-4 flex items-center justify-between bg-white flex-shrink-0 z-10">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <button onclick="UI.toggleBsHistory()" class="md:hidden p-1.5 text-brand-primary hover:bg-brand-bg rounded-lg" title="Buka Riwayat">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                        </button>
-
-                        <div class="min-w-0">
-                            <div id="bs-title-container" class="flex items-center gap-1.5 cursor-pointer" onclick="BrainstormUI.startInlineRename()">
+                <div class="h-13 border-b border-brand-primary/15 px-4 md:px-6 flex items-center justify-between bg-white flex-shrink-0 z-10">
+                    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div class="min-w-0 flex-1">
+                            <div id="bs-title-container" class="flex items-center gap-1.5 cursor-pointer max-w-md group" onclick="BrainstormUI.startInlineRename()" title="Klik untuk mengubah judul percakapan">
                                 <h3 id="bs-current-title" class="font-bold text-xs md:text-sm text-brand-text truncate">Brainstorming Partner</h3>
-                                <span class="text-[10px] text-brand-muted hover:text-brand-primary">✎</span>
+                                <span class="text-[11px] text-brand-muted group-hover:text-brand-primary opacity-60 group-hover:opacity-100 transition">✎</span>
                             </div>
                             <div id="bs-title-edit-box" class="hidden items-center gap-1">
                                 <input type="text" id="bs-title-input" class="p-1 text-xs border border-brand-primary rounded bg-white" onkeydown="BrainstormUI.handleTitleInputKey(event)">
-                                <button onclick="BrainstormUI.saveInlineRename()" class="text-xs text-green-600 font-bold px-1.5">✓</button>
-                                <button onclick="BrainstormUI.cancelInlineRename()" class="text-xs text-red-500 font-bold px-1.5">✕</button>
+                                <button onclick="BrainstormUI.saveInlineRename()" class="text-xs text-green-600 font-bold px-1.5 hover:bg-green-50 rounded">✓</button>
+                                <button onclick="BrainstormUI.cancelInlineRename()" class="text-xs text-red-500 font-bold px-1.5 hover:bg-red-50 rounded">✕</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        
-                        <button onclick="Brainstorm.deleteCurrentSession()" class="text-brand-muted hover:text-red-600 p-1.5 rounded" title="Hapus Percakapan">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <!-- Toggle History Button (Desktop, Tablet, & Mobile) -->
+                        <button onclick="UI.toggleBsHistory()" id="bs-history-toggle-btn" class="btn-secondary px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-brand-text hover:text-brand-primary transition" title="Buka/Tutup Riwayat Diskusi">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+                            <span class="text-xs">Riwayat</span>
+                        </button>
+
+                        <button onclick="Brainstorm.deleteCurrentSession()" class="p-1.5 text-brand-muted hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Percakapan Saat Ini">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
                         </button>
                     </div>
                 </div>
 
                 <!-- Chat Messages Scroll Container -->
-                <div id="bs-chat-area" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-brand-bg/15 relative" onscroll="BrainstormUI.checkScrollPosition()">
+                <div id="bs-chat-area" class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-4 bg-brand-bg/15 relative" onscroll="BrainstormUI.checkScrollPosition()">
                     <!-- Chat messages rendered here -->
                 </div>
 
                 <!-- Floating Scroll to Bottom Button -->
-                <button id="bs-scroll-btn" onclick="BrainstormUI.scrollToBottom(true)" class="absolute bottom-24 right-6 bg-brand-primary text-white px-3 py-1.5 rounded-full shadow-lg hidden items-center gap-1 text-xs font-semibold z-20">
+                <button id="bs-scroll-btn" onclick="BrainstormUI.scrollToBottom(true)" class="absolute bottom-24 right-6 bg-brand-primary text-white px-3 py-1.5 rounded-full shadow-lg hidden items-center gap-1 text-xs font-semibold z-20 hover:bg-brand-primary-hover transition">
                     <span>↓ Pesan terbaru</span>
                 </button>
 
@@ -686,7 +660,7 @@
                 </div>
 
                 <!-- Composer Area -->
-                <div class="p-3 bg-white border-t border-brand-primary/15 flex-shrink-0">
+                <div class="p-3 md:p-4 bg-white border-t border-brand-primary/15 flex-shrink-0">
                     <div class="max-w-3xl mx-auto flex items-end gap-2 relative bg-brand-bg/50 border border-brand-primary/25 rounded-2xl p-1.5 focus-within:border-brand-primary focus-within:bg-white transition">
                         <textarea id="bs-input" class="auto-grow w-full bg-transparent p-2 focus:outline-none text-xs md:text-sm text-brand-text placeholder-brand-muted/70 resize-none leading-relaxed" placeholder="Tulis ide, tanyakan celah misteri, atau minta saran karakter..." onkeydown="BrainstormUI.handleInputKey(event)" oninput="BrainstormUI.autoResize(this)"></textarea>
                         
@@ -698,6 +672,44 @@
                 </div>
 
             </div>
+
+            <!-- RIGHT: Session History Sidebar (Right Drawer on Mobile/Tablet · Right Sidebar on Desktop >= 1024px) -->
+            <aside id="bs-sidebar" class="fixed lg:static inset-y-0 right-0 z-40 w-[85%] max-w-[300px] lg:w-[280px] bg-brand-bg/40 border-l border-brand-primary/15 flex flex-col justify-between transform translate-x-full lg:translate-x-0 transition-all duration-200 flex-shrink-0 shadow-xl lg:shadow-none select-none">
+                <div class="flex flex-col flex-1 min-h-0">
+                    <!-- History Header -->
+                    <div class="h-13 px-3.5 border-b border-brand-primary/15 flex justify-between items-center bg-white flex-shrink-0">
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-primary"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+                            <span class="font-bold text-xs text-brand-primary tracking-tight">RIWAYAT DISKUSI</span>
+                        </div>
+                        <button onclick="UI.toggleBsHistory(false)" class="p-1 text-brand-muted hover:text-brand-primary rounded-lg transition" title="Tutup Riwayat">✕</button>
+                    </div>
+
+                    <!-- New Session Button -->
+                    <div class="p-2.5 pb-2">
+                        <button onclick="Brainstorm.createNewSession()" class="w-full btn-primary py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs">
+                            <span>+ Percakapan Baru</span>
+                        </button>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="px-2.5 mb-2">
+                        <div class="relative">
+                            <input type="text" id="bs-search-history" placeholder="Cari riwayat..." class="w-full p-1.5 pl-7 text-xs border border-brand-primary/20 rounded-lg bg-white focus:outline-none focus:border-brand-primary" onkeyup="BrainstormUI.renderHistoryList()">
+                            <span class="absolute left-2 top-2 text-[10px] text-brand-muted pointer-events-none">🔍</span>
+                        </div>
+                    </div>
+
+                    <!-- History List -->
+                    <div id="bs-history-list" class="flex-1 overflow-y-auto p-2 space-y-1.5 text-xs">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Backdrop Overlay for Mobile/Tablet Brainstorm History -->
+            <div id="bs-history-overlay" onclick="UI.toggleBsHistory(false)" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden transition-opacity"></div>
+
         </section>
 
         <!-- ===================================================================== -->
@@ -1115,6 +1127,22 @@ TUGAS ANDA:
             const p = document.createElement('p');
             p.textContent = str;
             return p.innerHTML;
+        };
+
+        const formatRelativeTime = (ts) => {
+            if (!ts) return 'Baru saja';
+            const diffMs = Date.now() - Number(ts);
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+
+            if (diffMin < 1) return 'Baru saja';
+            if (diffMin < 60) return `${diffMin} mnt lalu`;
+            if (diffHour < 24) return `${diffHour} jam lalu`;
+            if (diffDay === 1) return 'Kemarin';
+            if (diffDay < 7) return `${diffDay} hari lalu`;
+            return new Date(ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         };
 
         // ============================================================================
@@ -2563,7 +2591,11 @@ Kembalikan HANYA JSON Array of Objects:
                 BrainstormStore.saveSession(this.activeSession);
                 BrainstormUI.renderChat();
                 BrainstormUI.renderHistoryList();
-                if (window.innerWidth < 768) UI.toggleBsHistory(false);
+                if (window.innerWidth < 1024) UI.toggleBsHistory(false);
+                setTimeout(() => {
+                    const inp = document.getElementById('bs-input');
+                    if (inp) inp.focus();
+                }, 100);
             },
 
             loadSession(id) {
@@ -2575,7 +2607,7 @@ Kembalikan HANYA JSON Array of Objects:
                 }
                 BrainstormUI.renderChat();
                 BrainstormUI.renderHistoryList();
-                if (window.innerWidth < 768) UI.toggleBsHistory(false);
+                if (window.innerWidth < 1024) UI.toggleBsHistory(false);
             },
 
             deleteCurrentSession() {
@@ -2583,6 +2615,21 @@ Kembalikan HANYA JSON Array of Objects:
                 if (confirm(`Hapus percakapan "${this.activeSession.title}"?`)) {
                     BrainstormStore.deleteSession(this.activeSession.id);
                     this.init();
+                    UI.showToast("Percakapan dihapus.");
+                }
+            },
+
+            deleteSessionById(id) {
+                const list = BrainstormStore.getSessions();
+                const target = list.find(s => s.id === id);
+                if (!target) return;
+                if (confirm(`Hapus percakapan "${target.title}"?`)) {
+                    BrainstormStore.deleteSession(id);
+                    if (this.activeSession && this.activeSession.id === id) {
+                        this.init();
+                    } else {
+                        BrainstormUI.renderHistoryList();
+                    }
                     UI.showToast("Percakapan dihapus.");
                 }
             },
@@ -2763,20 +2810,36 @@ Kembalikan HANYA JSON Array of Objects:
                 if (!container) return;
 
                 if (filtered.length === 0) {
-                    container.innerHTML = `<div class="p-3 text-center text-brand-muted text-[11px]">Tidak ada percakapan.</div>`;
+                    container.innerHTML = `
+                    <div class="p-5 text-center text-xs text-brand-muted space-y-2">
+                        <p class="font-semibold text-brand-text">Belum ada percakapan.</p>
+                        <p class="text-[11px] leading-relaxed">Mulai brainstorming baru untuk mengembangkan ide cerita.</p>
+                        <button onclick="Brainstorm.createNewSession()" class="btn-primary py-1.5 px-3 rounded-lg text-xs font-bold mt-1">
+                            + Percakapan Baru
+                        </button>
+                    </div>`;
                     return;
                 }
 
                 container.innerHTML = filtered.map(s => {
                     const isActive = Brainstorm.activeSession && Brainstorm.activeSession.id === s.id;
-                    const lastMsg = (s.messages && s.messages.length > 0)
-                        ? s.messages[s.messages.length - 1].text.substring(0, 36) + '...'
-                        : 'Percakapan baru...';
+                    const msgCount = (s.messages || []).length;
+                    const timeStr = formatRelativeTime(s.updatedAt || s.createdAt);
 
                     return `
-                    <div onclick="Brainstorm.loadSession('${s.id}')" class="p-2 rounded-lg cursor-pointer transition border ${isActive ? 'bg-white border-brand-primary/40 shadow-xs' : 'border-transparent hover:bg-white/60'}">
-                        <div class="font-semibold text-brand-text truncate">${escapeHTML(s.title || 'Percakapan')}</div>
-                        <div class="text-[10px] text-brand-muted truncate mt-0.5">${escapeHTML(lastMsg)}</div>
+                    <div onclick="Brainstorm.loadSession('${s.id}')" class="group relative p-2.5 rounded-xl cursor-pointer transition border text-xs ${isActive ? 'bg-white border-brand-primary/40 shadow-xs ring-1 ring-brand-primary/20' : 'border-transparent hover:bg-white/70'}">
+                        <div class="flex items-start justify-between gap-1">
+                            <div class="font-semibold text-brand-text truncate flex-1 ${isActive ? 'text-brand-primary font-bold' : ''}">
+                                ${escapeHTML(s.title || 'Percakapan')}
+                            </div>
+                            <button onclick="event.stopPropagation(); Brainstorm.deleteSessionById('${s.id}')" class="opacity-0 group-hover:opacity-100 p-0.5 text-brand-muted hover:text-red-500 rounded transition text-[11px]" title="Hapus Percakapan">
+                                ✕
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between text-[10px] text-brand-muted mt-1">
+                            <span>${timeStr}</span>
+                            <span>${msgCount} pesan</span>
+                        </div>
                     </div>`;
                 }).join('');
             },
@@ -3601,6 +3664,12 @@ Kembalikan HANYA JSON:
                 const savedCol = localStorage.getItem('wb_sidebar_collapsed');
                 if (savedCol === 'true') this.setSidebarCollapsed(true);
 
+                const bsCol = localStorage.getItem('wb_bs_history_collapsed');
+                if (bsCol === 'true' && window.innerWidth >= 1024) {
+                    const sb = document.getElementById('bs-sidebar');
+                    if (sb) sb.classList.add('lg:hidden');
+                }
+
                 const ed = document.getElementById('story-content');
                 if (ed) {
                     ed.addEventListener('focus', () => {
@@ -3692,14 +3761,29 @@ Kembalikan HANYA JSON:
             toggleBsHistory(forceShow) {
                 const sb = document.getElementById('bs-sidebar');
                 const ov = document.getElementById('bs-history-overlay');
-                if (!sb || !ov) return;
-                const isHidden = sb.classList.contains('-translate-x-full');
-                if (forceShow === true || (forceShow === undefined && isHidden)) {
-                    sb.classList.remove('-translate-x-full');
-                    ov.classList.remove('hidden');
+                if (!sb) return;
+
+                const isDesktop = window.innerWidth >= 1024;
+                if (isDesktop) {
+                    const isHiddenDesktop = sb.classList.contains('lg:hidden');
+                    const shouldShow = (forceShow === true) || (forceShow === undefined && isHiddenDesktop);
+                    if (shouldShow) {
+                        sb.classList.remove('lg:hidden');
+                        localStorage.setItem('wb_bs_history_collapsed', 'false');
+                    } else {
+                        sb.classList.add('lg:hidden');
+                        localStorage.setItem('wb_bs_history_collapsed', 'true');
+                    }
                 } else {
-                    sb.classList.add('-translate-x-full');
-                    ov.classList.add('hidden');
+                    const isHiddenMobile = sb.classList.contains('translate-x-full');
+                    const shouldShow = (forceShow === true) || (forceShow === undefined && isHiddenMobile);
+                    if (shouldShow) {
+                        sb.classList.remove('translate-x-full');
+                        if (ov) ov.classList.remove('hidden');
+                    } else {
+                        sb.classList.add('translate-x-full');
+                        if (ov) ov.classList.add('hidden');
+                    }
                 }
             },
 
@@ -4240,6 +4324,7 @@ Kembalikan HANYA JSON:
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     UI.closeSettings();
+                    UI.toggleBsHistory(false);
                     const addM = document.getElementById('add-item-modal');
                     if (addM) addM.classList.add('hidden');
                     const impM = document.getElementById('import-preview-modal');
