@@ -128,6 +128,73 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Contextual AI Popup */
+        #context-popup {
+            position: absolute;
+            z-index: 50;
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(41, 36, 44, 0.15);
+            padding: 4px;
+            font-size: 12px;
+        }
+        #context-popup .popup-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 130px;
+        }
+        #context-popup .popup-btn {
+            padding: 6px 12px;
+            text-align: left;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text);
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+        #context-popup .popup-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        #context-popup.expanded .popup-initial { display: none; }
+        #context-popup:not(.expanded) .popup-menu { display: none; }
+        
+        .ai-suggestion-box {
+            background: var(--surface-2);
+            border-left: 3px solid var(--primary);
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+        .ai-suggestion-box .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .ai-suggestion-box button {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s ease;
+        }
+        .ai-suggestion-box .btn-terapkan { background: var(--primary); color: white; }
+        .ai-suggestion-box .btn-terapkan:hover { background: var(--primary-hover); }
+        .ai-suggestion-box .btn-tolak { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .ai-suggestion-box .btn-tolak:hover { background: var(--primary-light); }
+        .ai-suggestion-box .btn-salin { background: #e0d8e3; color: var(--text); }
+        .ai-suggestion-box .btn-salin:hover { background: #d0c8d3; }
     </style>
     <script>
         tailwind.config = {
@@ -755,6 +822,17 @@
 
             </div>
         </section>
+
+        <!-- Contextual AI Assistance Popup -->
+        <div id="context-popup">
+            <button class="popup-btn popup-initial" onclick="ContextUI.expand()">[ ✦ Bantu ]</button>
+            <div class="popup-menu">
+                <button class="popup-btn" onclick="ContextUI.handleAction('Perbaiki')">Perbaiki</button>
+                <button class="popup-btn" onclick="ContextUI.handleAction('Kembangkan')">Kembangkan</button>
+                <button class="popup-btn" onclick="ContextUI.handleAction('Ringkas')">Ringkas</button>
+                <button class="popup-btn" onclick="ContextUI.handleAction('Riset bagian ini')">Riset bagian ini</button>
+            </div>
+        </div>
 
     </main>
 
@@ -3908,6 +3986,180 @@ Kembalikan HANYA JSON:
             StoryEngine.openCurrentInBrainstorm();
         };
 
+        const ContextUI = {
+            currentSelectionText: '',
+            currentRange: null,
+            
+            init() {
+                document.addEventListener('selectionchange', () => {
+                    const selection = window.getSelection();
+                    const storyContent = document.getElementById('story-content');
+                    if (!storyContent || !storyContent.contains(selection.anchorNode)) {
+                        this.hide();
+                        return;
+                    }
+                    
+                    const text = selection.toString().trim();
+                    if (text.length > 5) {
+                        const range = selection.getRangeAt(0);
+                        const rect = range.getBoundingClientRect();
+                        this.show(rect.left + window.scrollX + (rect.width / 2), rect.top + window.scrollY - 40, text, range);
+                    } else {
+                        this.hide();
+                    }
+                });
+                
+                document.addEventListener('mousedown', (e) => {
+                    const popup = document.getElementById('context-popup');
+                    if (popup && !popup.contains(e.target)) {
+                        setTimeout(() => {
+                            if (!window.getSelection().toString().trim()) {
+                                this.hide();
+                            }
+                        }, 100);
+                    }
+                });
+            },
+            
+            show(x, y, text, range) {
+                const popup = document.getElementById('context-popup');
+                popup.style.display = 'block';
+                popup.style.left = `${x - 65}px`;
+                popup.style.top = `${y}px`;
+                popup.classList.remove('expanded');
+                this.currentSelectionText = text;
+                this.currentRange = range.cloneRange();
+            },
+            
+            hide() {
+                const popup = document.getElementById('context-popup');
+                if (popup) popup.style.display = 'none';
+            },
+            
+            expand() {
+                const popup = document.getElementById('context-popup');
+                popup.classList.add('expanded');
+            },
+            
+            async handleAction(action) {
+                this.hide();
+                const text = this.currentSelectionText;
+                const range = this.currentRange;
+                if (!text || !range) return;
+
+                let container = range.commonAncestorContainer;
+                while (container && container.nodeName !== 'P' && container.nodeName !== 'DIV' && container.nodeName !== 'ARTICLE') {
+                    container = container.parentNode;
+                }
+                if (!container || container.id === 'story-content') container = document.getElementById('story-content').lastElementChild;
+
+                const boxId = 'ai-sugg-' + Date.now();
+                const box = document.createElement('div');
+                box.id = boxId;
+                box.className = 'ai-suggestion-box';
+                box.innerHTML = `<div class="loader-sm mb-2"></div><span class="text-xs text-brand-muted">AI sedang memproses...</span>`;
+                
+                if (container && container.nextSibling) {
+                    container.parentNode.insertBefore(box, container.nextSibling);
+                } else if (container) {
+                    container.parentNode.appendChild(box);
+                }
+
+                try {
+                    let prompt = "";
+                    let systemPrompt = "Anda adalah asisten penulis cerita misteri. Berikan teks hasil secara langsung tanpa pembukaan atau penutup. Hanya gunakan bahasa Indonesia yang mengalir, sesuai dengan konteks dan gaya penulisan metro-pop misteri.";
+                    
+                    if (action === 'Perbaiki') {
+                        prompt = `Perbaiki teks berikut agar lebih mengalir, gramatikal, dan cocok untuk novel misteri metro-pop. Teks: "${text}"`;
+                    } else if (action === 'Kembangkan') {
+                        prompt = `Kembangkan teks berikut dengan detail sensorik, suasana misteri, atau dialog yang lebih tajam. Teks: "${text}"`;
+                    } else if (action === 'Ringkas') {
+                        prompt = `Ringkas teks berikut agar lebih padat dan to the point tanpa menghilangkan esensi misterinya. Teks: "${text}"`;
+                    } else if (action === 'Riset bagian ini') {
+                        prompt = `Berikan riset, fakta, atau ide latar belakang yang relevan dengan topik pada teks ini, yang bisa memperkaya cerita misteri. Teks: "${text}"`;
+                        systemPrompt = "Anda adalah asisten riset untuk penulis cerita misteri. Berikan poin-poin riset yang relevan. Format dengan markdown.";
+                    }
+
+                    const response = await API.call(prompt, false, { systemInstruction: systemPrompt });
+                    
+                    let buttonsHtml = '';
+                    if (action === 'Riset bagian ini') {
+                        buttonsHtml = `
+                            <button class="btn-salin" onclick="ContextUI.copyResearch('${boxId}')">[ Gunakan untuk Cerita ]</button>
+                            <button class="btn-terapkan" onclick="ContextUI.saveResearch('${boxId}')">[ Ingat untuk Nanti ]</button>
+                            <button class="btn-tolak" onclick="document.getElementById('${boxId}').remove()">[ Tolak ]</button>
+                        `;
+                    } else {
+                        buttonsHtml = `
+                            <button class="btn-terapkan" onclick="ContextUI.applyText('${boxId}')">[ Terapkan ]</button>
+                            <button class="btn-salin" onclick="ContextUI.copyText('${boxId}')">[ Salin ]</button>
+                            <button class="btn-tolak" onclick="document.getElementById('${boxId}').remove()">[ Tolak ]</button>
+                        `;
+                    }
+
+                    box.innerHTML = `
+                        <div class="ai-message-content ai-response-text text-sm">${response.replace(/\n/g, '<br>')}</div>
+                        <div class="actions">${buttonsHtml}</div>
+                    `;
+                    box.targetRange = range;
+                    
+                } catch (e) {
+                    box.innerHTML = `<div class="text-red-500 text-xs mb-2">Gagal memproses: ${e.message}</div>
+                                     <div class="actions"><button class="btn-tolak" onclick="document.getElementById('${boxId}').remove()">[ Tutup ]</button></div>`;
+                }
+            },
+            
+            applyText(boxId) {
+                const box = document.getElementById(boxId);
+                if (!box || !box.targetRange) return;
+                const newText = box.querySelector('.ai-response-text').innerText;
+                
+                try {
+                    const range = box.targetRange;
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(newText));
+                    StoryEngine.saveToHistory();
+                    UI.showToast('Teks berhasil diterapkan');
+                } catch(e) {
+                    console.error(e);
+                    UI.showToast('Gagal menerapkan teks. Silakan salin manual.');
+                }
+                box.remove();
+                window.getSelection().removeAllRanges();
+            },
+            
+            copyText(boxId) {
+                const box = document.getElementById(boxId);
+                if (!box) return;
+                const text = box.querySelector('.ai-response-text').innerText;
+                navigator.clipboard.writeText(text);
+                UI.showToast('Disalin ke clipboard');
+            },
+            
+            copyResearch(boxId) {
+                this.copyText(boxId);
+            },
+            
+            saveResearch(boxId) {
+                const box = document.getElementById(boxId);
+                if (!box) return;
+                const text = box.querySelector('.ai-response-text').innerText;
+                
+                let knowledge = Storage.get('wb_knowledge', { settings: {}, custom_rules: [], research_knowledge: [] });
+                if (!knowledge.research_knowledge) knowledge.research_knowledge = [];
+                
+                knowledge.research_knowledge.push({
+                    id: 'rsh-' + Date.now(),
+                    content: text,
+                    date: new Date().toISOString()
+                });
+                
+                Storage.set('wb_knowledge', knowledge);
+                UI.showToast('Disimpan ke Pengetahuan Pribadi');
+                box.remove();
+            }
+        };
+
         // ============================================================================
         // 12. APP INITIALIZATION LIFECYCLE
         // ============================================================================
@@ -3916,6 +4168,7 @@ Kembalikan HANYA JSON:
             ProviderManager.init();
             UserMemory.init();
             UI.init();
+            ContextUI.init();
             UI.navigateTo('create');
 
             document.addEventListener('keydown', (e) => {
