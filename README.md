@@ -26,17 +26,28 @@ Aplikasi ini berjalan 100% *client-side* tanpa perlu backend server, build tools
 Aplikasi didesain menggunakan model *App Shell* dengan sidebar navigasi tetap dan *single scroll container*:
 
 - **CREATE**:
-  - `Buat Cerita`: Meja kerja penyusunan naskah (Wizard 8-tahap atau 5 pilihan alur alur).
+  - `Buat Cerita`: Meja kerja penyusunan naskah (Wizard 8-tahap atau 5 pilihan alur).
   - `Brainstorm`: Partner diskusi interaktif jangka panjang untuk membedah motif, alibi, dan plot twist rasional.
-- **BRAIN**:
+- **BRAIN & LAB**:
   - `Writing Brain`: Pusat penyimpanan gaya menulis penulis, pola alur, dan prinsip misteri fair-play.
-  - `Research`: Catatan fakta realistis (audit korporat, protokol apartemen, prosedur kepolisian).
+  - `Research Lab`: **AI-Powered Internet Research Engine** untuk riset aktif internet, ekstraksi fakta nyata, evaluasi nilai penulisan, dan penemuan pengetahuan baru (*Proactive Discovery*).
 - **LIBRARY**:
   - `Story History`: Arsip seluruh naskah cerpen yang telah dibuat.
 - **SETTINGS**:
   - Konfigurasi AI Provider, Memori & Otonomi, serta Cadangan Data.
 
 *Catatan Tampilan*: Pada layar desktop (≥900px), sidebar dapat diciutkan menjadi ikon ringkas (68px). Pada layar ponsel (<900px), sidebar bertransformasi menjadi laci (drawer) yang dapat dibuka melalui tombol menu atas.
+
+---
+
+## 🔬 AI-Powered Internet Research Engine
+
+Research Engine bukan sekadar tempat mencatat, melainkan sistem akuisisi pengetahuan aktif berbasis internet:
+
+1. **Direct Research**: Riset topik spesifik dari internet dengan penarikan sumber artikel nyata (Wikipedia & Web REST API), analisis kebaruan (*Novelty*), evaluasi nilai penulisan (*Writing Value: LOW/MEDIUM/HIGH*), serta sintesis aplikasi dialog, narasi, karakter, dan twist.
+2. **Discovery Engine**: Eksplorasi proaktif untuk menemukan fakta, fenomena psikologis, atau teknik bercerita baru yang belum ada di Writing Brain.
+3. **Research Queue**: Antrean topik riset yang dapat dieksekusi secara terstruktur.
+4. **Writing Brain Integration**: Tombol 1-klik untuk mentransfer temuan riset lengkap dengan sumber URL asli terverifikasi ke dalam *Writing Brain*.
 
 ---
 
@@ -64,6 +75,6 @@ Aplikasi mengadopsi prinsip **Local-First** murni tanpa database cloud:
    - Anda dapat menyimpan berkas ZIP tersebut di perangkat atau mengunggahnya secara manual sebagai asset pada GitHub Releases repository Anda.
 3. **Impor & Safe Merge**:
    - Klik **"IMPORT BACKUP"** dan pilih berkas `.zip`.
-   - Aplikasi memvalidasi integritas data dan menampilkan pratinjau data.
+   - Aplikasi memvalidasi integritas data dan menampilkan pratinjau data (termasuk laporan riset).
    - Pilih mode **Gabungkan (Merge)** untuk menggabungkan data tanpa menghapus data lokal, atau mode **Timpa (Replace)** jika ingin menyetel ulang.
    - Jika terdapat perbedaan revisi pada cerita atau catatan yang sama, aplikasi akan menampilkan antarmuka resolusi konflik (*Conflict Resolution*) agar tidak ada tulisan Anda yang terhapus secara sepihak.

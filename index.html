@@ -224,17 +224,20 @@
                     </div>
                 </div>
 
-                <!-- SECTION: BRAIN -->
+                <!-- SECTION: BRAIN & RESEARCH -->
                 <div>
-                    <div class="sidebar-label px-2.5 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-brand-muted/70">Brain</div>
+                    <div class="sidebar-label px-2.5 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-brand-muted/70">Brain & Lab</div>
                     <div class="space-y-1">
                         <button onclick="UI.navigateTo('brain')" id="nav-brain" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-brand-text hover:bg-brand-bg transition group" title="Writing Brain & Gaya">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-primary flex-shrink-0"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
                             <span class="sidebar-label truncate">Writing Brain</span>
                         </button>
-                        <button onclick="UI.navigateTo('research')" id="nav-research" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-brand-text hover:bg-brand-bg transition group" title="Catatan Riset Realistis">
+                        <button onclick="UI.navigateTo('research')" id="nav-research" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-brand-text hover:bg-brand-bg transition group" title="Internet Research Engine">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-primary flex-shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                            <span class="sidebar-label truncate">Research</span>
+                            <span class="sidebar-label truncate flex items-center justify-between flex-1">
+                                <span>Research Lab</span>
+                                <span class="text-[9px] bg-brand-primary/10 text-brand-primary font-bold px-1.5 py-0.2 rounded-full">AI Live</span>
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -535,7 +538,7 @@
         <!-- ===================================================================== -->
         <section id="view-brainstorm" class="hidden flex-1 flex flex-row min-h-0 bg-white relative">
             
-            <!-- Left Session History Sidebar (250px Desktop · Drawer Mobile) -->
+            <!-- Left Session History Sidebar (260px Desktop · Drawer Mobile) -->
             <aside id="bs-sidebar" class="fixed md:static inset-y-0 left-0 z-20 w-[260px] md:w-[260px] bg-brand-bg/40 border-r border-brand-primary/15 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-200 flex-shrink-0">
                 <div class="flex flex-col flex-1 min-h-0">
                     <div class="p-3 border-b border-brand-primary/15 flex justify-between items-center bg-white">
@@ -651,6 +654,7 @@
                         <button onclick="WritingBrainUI.setFilter('preference')" id="wb-tab-preference" class="px-3 py-1 rounded-lg text-brand-muted hover:bg-brand-bg font-medium">Gaya Saya</button>
                         <button onclick="WritingBrainUI.setFilter('pattern')" id="wb-tab-pattern" class="px-3 py-1 rounded-lg text-brand-muted hover:bg-brand-bg font-medium">Pola Cerita</button>
                         <button onclick="WritingBrainUI.setFilter('principles')" id="wb-tab-principles" class="px-3 py-1 rounded-lg text-brand-muted hover:bg-brand-bg font-medium">Prinsip Misteri</button>
+                        <button onclick="WritingBrainUI.setFilter('research_knowledge')" id="wb-tab-research_knowledge" class="px-3 py-1 rounded-lg text-brand-muted hover:bg-brand-bg font-medium">Dari Riset Internet</button>
                     </div>
                 </div>
 
@@ -662,26 +666,166 @@
         </section>
 
         <!-- ===================================================================== -->
-        <!-- VIEW 8: RESEARCH & URBAN REALITY WORKSPACE -->
+        <!-- VIEW 8: AI-POWERED INTERNET RESEARCH ENGINE (RESEARCH LAB) -->
         <!-- ===================================================================== -->
-        <section id="view-research" class="hidden flex-1 flex flex-col min-h-0 overflow-y-auto p-4 md:p-6 lg:p-8">
-            <div class="max-w-4xl mx-auto w-full space-y-4">
-                
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-brand-primary/15 pb-3">
-                    <div>
-                        <h2 class="text-xl font-bold text-brand-text">Catatan Riset & Realitas Urban</h2>
-                        <p class="text-xs text-brand-muted">Kumpulan fakta logis, prosedur audit kantor, protokol apartemen, dan mekanisme nyata tanpa supranatural.</p>
+        <section id="view-research" class="hidden flex-1 flex flex-col min-h-0 bg-white">
+            
+            <!-- Research Lab Sub-Header Toolbar -->
+            <div class="h-13 border-b border-brand-primary/15 px-4 md:px-6 flex items-center justify-between bg-white flex-shrink-0 z-10">
+                <div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <div class="w-6 h-6 rounded bg-brand-primary/10 text-brand-primary flex items-center justify-center font-bold text-xs">🔬</div>
+                        <h2 class="font-bold text-sm text-brand-text">Research Lab</h2>
                     </div>
-                    <button onclick="ResearchUI.showAddModal()" class="btn-primary px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1">
-                        <span>+ Tambah Riset</span>
-                    </button>
+
+                    <!-- Sub-view Navigation Tabs -->
+                    <div class="flex items-center gap-1 text-xs border-l border-brand-primary/15 pl-3 flex-shrink-0 font-medium">
+                        <button onclick="ResearchEngine.switchSubTab('direct')" id="rs-tab-direct" class="px-2.5 py-1 rounded-lg bg-brand-primary text-white font-semibold">Direct Research</button>
+                        <button onclick="ResearchEngine.switchSubTab('discovery')" id="rs-tab-discovery" class="px-2.5 py-1 rounded-lg text-brand-muted hover:bg-brand-bg">Discovery Engine</button>
+                        <button onclick="ResearchEngine.switchSubTab('queue')" id="rs-tab-queue" class="px-2.5 py-1 rounded-lg text-brand-muted hover:bg-brand-bg">Queue (<span id="queue-badge-count">0</span>)</button>
+                        <button onclick="ResearchEngine.switchSubTab('history')" id="rs-tab-history" class="px-2.5 py-1 rounded-lg text-brand-muted hover:bg-brand-bg">Riwayat Riset</button>
+                    </div>
                 </div>
 
-                <div id="research-grid" class="grid sm:grid-cols-2 gap-3">
-                    <!-- Injected via JS -->
+                <!-- Internet Live Status Badge -->
+                <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-300 bg-emerald-50 text-[10px] text-emerald-800 font-semibold flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Internet Active</span>
                 </div>
-
             </div>
+
+            <!-- Research Work Area (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-brand-bg/30">
+                <div class="max-w-4xl mx-auto w-full space-y-5">
+                    
+                    <!-- ========================================================= -->
+                    <!-- SUB-PANEL 1: DIRECT RESEARCH -->
+                    <!-- ========================================================= -->
+                    <div id="rs-panel-direct" class="space-y-4">
+                        
+                        <!-- Search / Input Card -->
+                        <div class="card p-4 md:p-5 space-y-3">
+                            <div>
+                                <label for="rs-direct-query" class="block font-bold text-xs text-brand-text mb-1 flex items-center justify-between">
+                                    <span>Topik Riset Internet:</span>
+                                    <span class="text-[10px] font-normal text-brand-muted">Mencari sumber nyata & sintesis untuk penulisan</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="rs-direct-query" placeholder="Contoh: Psikologi saksi mata dalam trauma, Prosedur audit kepatuhan bank, Unreliable narrator..." class="flex-1 p-2.5 text-xs md:text-sm border border-brand-primary/25 rounded-xl bg-white focus:outline-none focus:border-brand-primary font-medium" onkeydown="if(event.key==='Enter') ResearchEngine.runDirectResearch()">
+                                    <button onclick="ResearchEngine.runDirectResearch()" id="btn-run-direct-research" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 flex-shrink-0">
+                                        <span>🔍 Riset Internet</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Options: Category & Dual Search Mode -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] text-brand-muted font-medium">Domain:</span>
+                                    <select id="rs-direct-category" class="p-1.5 text-xs border border-brand-primary/20 rounded-lg bg-white">
+                                        <option value="Storytelling & Narrative Techniques">Teknik Penulisan & Naratif</option>
+                                        <option value="Psychology & Human Behavior">Psikologi & Perilaku Manusia</option>
+                                        <option value="Forensic Science & Investigation">Sains Forensik & Prosedur Investigasi</option>
+                                        <option value="Urban Culture & Sociology">Sosiologi & Realitas Urban</option>
+                                        <option value="Unusual Professions & Places">Profesi & Tempat Unik</option>
+                                        <option value="General Mystery & Reality">Misteri & Fakta Umum</option>
+                                    </select>
+                                </div>
+
+                                <button onclick="ResearchEngine.searchLocalKnowledgeFromQuery()" class="text-[11px] text-brand-primary hover:underline font-semibold flex items-center gap-1">
+                                    <span>📁 Cari di Knowledge Lokal Saja</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar Container -->
+                        <div id="rs-progress-box" class="hidden card p-4 space-y-2 border-brand-primary/30 bg-brand-primary/5 text-xs">
+                            <div class="flex items-center justify-between">
+                                <span id="rs-progress-step" class="font-bold text-brand-primary flex items-center gap-2">
+                                    <div class="loader-sm"></div>
+                                    <span>Menghubungi sumber internet...</span>
+                                </span>
+                                <span id="rs-progress-percent" class="text-[11px] text-brand-muted font-mono">25%</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div id="rs-progress-bar" class="bg-brand-primary h-full transition-all duration-300 w-1/4"></div>
+                            </div>
+                        </div>
+
+                        <!-- Direct Research Result Container -->
+                        <div id="rs-direct-result" class="hidden space-y-4">
+                            <!-- Injected dynamically via JS -->
+                        </div>
+
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- SUB-PANEL 2: DISCOVERY ENGINE (Proactive Discovery) -->
+                    <!-- ========================================================= -->
+                    <div id="rs-panel-discovery" class="hidden space-y-4">
+                        
+                        <div class="card p-5 md:p-6 space-y-3 bg-gradient-to-r from-brand-bg to-brand-primary/5 border-brand-primary/25">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="space-y-1">
+                                    <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary font-bold text-[10px]">
+                                        <span>PROACTIVE DISCOVERY</span>
+                                    </div>
+                                    <h3 class="text-base md:text-lg font-bold text-brand-text">Eksplorasi Pengetahuan Baru dari Internet</h3>
+                                    <p class="text-xs text-brand-muted max-w-xl leading-relaxed">
+                                        Biarkan AI menjelajah sumber-sumber nyata di internet untuk menemukan fenomena psikologis, teknik narasi, atau fakta urban baru yang belum terekam di Writing Brain.
+                                    </p>
+                                </div>
+                                <button onclick="ResearchEngine.runDiscovery()" id="btn-run-discovery" class="btn-primary py-3 px-5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm flex-shrink-0">
+                                    <span>✨ Temukan Pengetahuan Baru</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Discovery Results List -->
+                        <div id="rs-discovery-list" class="space-y-3">
+                            <div class="card p-8 text-center text-xs text-brand-muted space-y-2">
+                                <p>Klik tombol <strong>"Temukan Pengetahuan Baru"</strong> untuk memulai pencarian proaktif di internet.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- SUB-PANEL 3: RESEARCH QUEUE -->
+                    <!-- ========================================================= -->
+                    <div id="rs-panel-queue" class="hidden space-y-4">
+                        
+                        <div class="card p-4 space-y-3">
+                            <h3 class="font-bold text-xs text-brand-text uppercase tracking-wider">Tambah Topik ke Antrean Riset:</h3>
+                            <div class="flex gap-2">
+                                <input type="text" id="rs-queue-input" placeholder="Contoh: Psikologi isolasi modern di perumahan klaster, Prosedur loker penitipan stasiun..." class="flex-1 p-2 text-xs border border-brand-primary/25 rounded-lg bg-white" onkeydown="if(event.key==='Enter') ResearchEngine.addToQueue()">
+                                <button onclick="ResearchEngine.addToQueue()" class="btn-primary px-4 py-2 rounded-lg text-xs font-bold">+ Antrekan</button>
+                            </div>
+                        </div>
+
+                        <div id="rs-queue-list" class="space-y-2">
+                            <!-- Injected via JS -->
+                        </div>
+
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- SUB-PANEL 4: RESEARCH HISTORY -->
+                    <!-- ========================================================= -->
+                    <div id="rs-panel-history" class="hidden space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-xs text-brand-muted uppercase tracking-wider">Laporan Riset Tersimpan</h3>
+                            <span id="rs-history-count" class="text-xs text-brand-muted">0 laporan</span>
+                        </div>
+
+                        <div id="rs-history-list" class="grid sm:grid-cols-2 gap-3">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </section>
 
         <!-- ===================================================================== -->
@@ -805,7 +949,7 @@
                             <div>Stories: <strong id="sum-stories">0</strong></div>
                             <div>Brainstorm: <strong id="sum-brainstorm">0</strong></div>
                             <div>Writing Brain: <strong id="sum-knowledge">0</strong></div>
-                            <div>Research: <strong id="sum-research">0</strong></div>
+                            <div>Research Reports: <strong id="sum-research">0</strong></div>
                         </div>
                         <p class="text-[10px] text-brand-muted" id="sum-last-backup">Terakhir backup: Belum pernah</p>
                     </div>
@@ -899,7 +1043,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- CONFLICT RESOLUTION DRAWER / MODAL -->
+    <!-- CONFLICT RESOLUTION MODAL -->
     <!-- ========================================================================= -->
     <div id="conflict-modal" class="fixed inset-0 bg-black/40 z-[60] hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden border border-brand-primary/20 text-xs">
@@ -983,9 +1127,9 @@
     <!-- JAVASCRIPT LOGIC ENGINE -->
     <!-- ========================================================================= -->
     <script>
-        const APP_VERSION = "2.2.0";
-        const SCHEMA_VERSION = "2.0.0";
-        const BACKUP_PASS = "tc123456"; // Internal ZIP password requirement
+        const APP_VERSION = "2.3.0";
+        const SCHEMA_VERSION = "2.1.0";
+        const BACKUP_PASS = "tc123456";
 
         const SYSTEM_INSTRUCTION = `Anda adalah AI Story Builder spesialis cerpen "Realistic Metro-Pop Mystery" Indonesia.
 ATURAN MUTLAK METRO-POP REALISTIC MYSTERY:
@@ -1042,10 +1186,12 @@ TUGAS ANDA:
             init() {
                 if (!this.get('wb_brainstorm_sessions')) this.set('wb_brainstorm_sessions', []);
                 if (!this.get('ceritametro_history')) this.set('ceritametro_history', []);
-                if (!this.get('wb_research')) {
-                    this.set('wb_research', [
-                        { id: generateId('rs'), title: 'Prosedur Audit Perbankan', summary: 'Transaksi di atas jam cut-off memerlukan persetujuan dual-sign dari manajer kepatuhan.', topic: 'Korporat', updatedAt: Date.now() },
-                        { id: generateId('rs'), title: 'Akses Lift Apartemen', summary: 'Kartu akses modern merekam timestamp spesifik lantai tujuan dan nomor kartu yang digunakan.', topic: 'Apartemen', updatedAt: Date.now() }
+                if (!this.get('wb_research_history')) this.set('wb_research_history', []);
+                if (!this.get('wb_research_queue')) {
+                    this.set('wb_research_queue', [
+                        { id: generateId('q'), topic: 'Psikologi saksi mata dan distorsi memori traumatik', category: 'Psychology & Human Behavior', addedAt: Date.now() },
+                        { id: generateId('q'), topic: 'Prosedur audit forensik perbankan dan transaksi malam hari', category: 'Forensic Science & Investigation', addedAt: Date.now() },
+                        { id: generateId('q'), topic: 'Unreliable narrator techniques and misdirection in modern mystery', category: 'Storytelling & Narrative Techniques', addedAt: Date.now() }
                     ]);
                 }
                 if (!this.get('wb_knowledge')) {
@@ -1073,7 +1219,7 @@ TUGAS ANDA:
             resetAllData() {
                 if (confirm("Hapus seluruh naskah, percakapan, dan catatan Writing Brain lokal?")) {
                     if (confirm("Konfirmasi terakhir: Tindakan ini tidak dapat dibatalkan.")) {
-                        ['ceritametro_history', 'wb_brainstorm_sessions', 'wb_knowledge', 'wb_research', 'wb_user_profile'].forEach(k => localStorage.removeItem(k));
+                        ['ceritametro_history', 'wb_brainstorm_sessions', 'wb_knowledge', 'wb_research_history', 'wb_research_queue', 'wb_user_profile'].forEach(k => localStorage.removeItem(k));
                         this.init();
                         UI.showToast("Data lokal telah direset.");
                         setTimeout(() => location.reload(), 600);
@@ -1083,7 +1229,587 @@ TUGAS ANDA:
         };
 
         // ============================================================================
-        // 2. BACKUP & EXPORT/IMPORT ENGINE (Password Protected ZIP & Conflict Resolver)
+        // 2. INTERNET RESEARCH FETCHER (Real-Time Web API Retrieval)
+        // ============================================================================
+        const InternetResearchFetcher = {
+            async searchWikipedia(query, lang = "id", limit = 4) {
+                try {
+                    const searchUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`;
+                    const res = await fetch(searchUrl);
+                    if (!res.ok) return [];
+                    const data = await res.json();
+                    const searchHits = (data.query?.search || []).slice(0, limit);
+
+                    if (searchHits.length === 0) return [];
+
+                    const titles = searchHits.map(h => h.title).join('|');
+                    const extractUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts|info&inprop=url&exintro=1&explaintext=1&titles=${encodeURIComponent(titles)}&format=json&origin=*`;
+                    const extractRes = await fetch(extractUrl);
+                    if (!extractRes.ok) return [];
+                    const extractData = await extractRes.json();
+                    const pages = extractData.query?.pages || {};
+
+                    const sources = [];
+                    for (const pid of Object.keys(pages)) {
+                        const page = pages[pid];
+                        if (page && page.title && page.extract) {
+                            sources.push({
+                                title: page.title,
+                                url: page.fullurl || `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`,
+                                snippet: (page.extract || '').substring(0, 450),
+                                language: lang,
+                                sourceQuality: "Encyclopedic / Verified Public Knowledge"
+                            });
+                        }
+                    }
+                    return sources;
+                } catch (e) {
+                    console.warn(`Wikipedia search failed for [${lang}]:`, e);
+                    return [];
+                }
+            },
+
+            async fetchInternetSources(query) {
+                // Fetch from both Indonesian and Global Wikipedia for deep domain coverage
+                const [idSources, enSources] = await Promise.all([
+                    this.searchWikipedia(query, "id", 3),
+                    this.searchWikipedia(query, "en", 3)
+                ]);
+
+                const combined = [...idSources, ...enSources];
+                // Remove potential duplicate titles
+                const unique = [];
+                const seen = new Set();
+                for (const s of combined) {
+                    if (!seen.has(s.title.toLowerCase())) {
+                        seen.add(s.title.toLowerCase());
+                        unique.push(s);
+                    }
+                }
+                return unique;
+            }
+        };
+
+        // ============================================================================
+        // 3. RESEARCH ENGINE (AI-Powered Active Research & Discovery)
+        // ============================================================================
+        const ResearchEngine = {
+            isResearching: false,
+            currentResult: null,
+
+            init() {
+                this.renderQueue();
+                this.renderHistory();
+            },
+
+            switchSubTab(tabName) {
+                ['direct', 'discovery', 'queue', 'history'].forEach(t => {
+                    const btn = document.getElementById(`rs-tab-${t}`);
+                    const panel = document.getElementById(`rs-panel-${t}`);
+                    if (btn && panel) {
+                        if (t === tabName) {
+                            btn.className = "px-2.5 py-1 rounded-lg bg-brand-primary text-white font-semibold";
+                            panel.classList.remove('hidden');
+                        } else {
+                            btn.className = "px-2.5 py-1 rounded-lg text-brand-muted hover:bg-brand-bg";
+                            panel.classList.add('hidden');
+                        }
+                    }
+                });
+                if (tabName === 'history') this.renderHistory();
+                if (tabName === 'queue') this.renderQueue();
+            },
+
+            updateProgress(stepText, percent) {
+                const box = document.getElementById('rs-progress-box');
+                const stepEl = document.getElementById('rs-progress-step');
+                const pctEl = document.getElementById('rs-progress-percent');
+                const barEl = document.getElementById('rs-progress-bar');
+
+                if (box && stepEl) {
+                    if (percent !== null) {
+                        box.classList.remove('hidden');
+                        stepEl.innerHTML = `<div class="loader-sm"></div><span>${escapeHTML(stepText)}</span>`;
+                        if (pctEl) pctEl.textContent = `${percent}%`;
+                        if (barEl) barEl.style.width = `${percent}%`;
+                    } else {
+                        box.classList.add('hidden');
+                    }
+                }
+            },
+
+            async runDirectResearch(overrideQuery = null, overrideCategory = null) {
+                if (this.isResearching) return;
+                const queryInput = document.getElementById('rs-direct-query');
+                const categorySelect = document.getElementById('rs-direct-category');
+                const query = overrideQuery || (queryInput ? queryInput.value.trim() : '');
+                const category = overrideCategory || (categorySelect ? categorySelect.value : 'General Mystery & Reality');
+
+                if (!query) {
+                    UI.showToast("Masukkan topik yang ingin diriset.");
+                    return;
+                }
+
+                this.isResearching = true;
+                const btn = document.getElementById('btn-run-direct-research');
+                if (btn) btn.disabled = true;
+
+                const resultContainer = document.getElementById('rs-direct-result');
+                if (resultContainer) resultContainer.classList.add('hidden');
+
+                try {
+                    // 1. Search Live Internet Sources
+                    this.updateProgress(`1/3 Mencari sumber internet nyata untuk "${query}"...`, 25);
+                    const sources = await InternetResearchFetcher.fetchInternetSources(query);
+
+                    if (sources.length === 0) {
+                        throw new Error(`Tidak dapat menemukan artikel/sumber online untuk topik "${query}". Pastikan peramban Anda terhubung ke internet.`);
+                    }
+
+                    // 2. Read and Synthesize via AI
+                    this.updateProgress(`2/3 Membaca ${sources.length} sumber & mengevaluasi nilai penulisan...`, 60);
+
+                    const existingKnowledge = Storage.get('wb_knowledge', []);
+                    const knowledgeBrief = existingKnowledge.slice(0, 8).map(k => `- ${k.title}: ${k.summary}`).join('\n');
+
+                    const sourcePayload = sources.map((s, idx) => `[SUMBER ${idx + 1}]:\nJudul: ${s.title}\nURL: ${s.url}\nKualitas: ${s.sourceQuality}\nIsi Teks:\n${s.snippet}`).join('\n\n');
+
+                    const prompt = `Anda adalah AI Research Engine spesialis penulisan "Realistic Metro-Pop Mystery".
+TUGAS: Analisis data dari sumber-sumber internet nyata berikut untuk mengekstrak pengetahuan yang memperkaya logika, psikologi, atau teknik cerita.
+
+TOPIK: ${query} (Kategori: ${category})
+
+SUMBER-SUMBER NYATA DITEMUKAN DI INTERNET:
+${sourcePayload}
+
+KNOWLEDGE SAAT INI DI WRITING BRAIN:
+${knowledgeBrief || 'Belum ada'}
+
+INSTRUKSI WAJIB:
+1. WHAT WAS FOUND: Ringkas temuan fakta/fenomena nyata secara akurat berdasarkan sumber di atas.
+2. NOVELTY: Tentukan apakah ini "NEW INSIGHT" atau "ALREADY KNOWN" dibandingkan knowledge saat ini.
+3. WRITING VALUE: Nilai "HIGH", "MEDIUM", atau "LOW" dengan alasan mengapa berguna untuk cerita.
+4. WRITING APPLICATIONS: Jelaskan aplikasi konkret untuk dialog, narasi, dan ketegangan (suspense).
+5. STORY APPLICATIONS: Rancang aplikasi untuk karakter, plot, setting, konflik, twist possibility, dan 2 premis cerita realistis.
+6. SOURCES: Sertakan sumber-sumber nyata yang benar-benar diberikan di atas (jangan karang URL).
+
+Kembalikan HANYA format JSON valid:
+{
+  "topic": "${query}",
+  "category": "${category}",
+  "whatWasFound": "Penjelasan ringkas temuan fakta dari sumber",
+  "keyKnowledge": ["Fakta 1", "Fakta 2", "Fakta 3"],
+  "whyItMatters": "Alasan mengapa fakta/fenomena ini penting",
+  "novelty": "NEW INSIGHT",
+  "writingValue": "HIGH",
+  "writingValueReason": "Penjelasan alasan nilai penulisan",
+  "writingApplications": {
+    "dialogue": "Penerapan pada gaya bicara / dialog",
+    "suspense": "Penerapan pada pembangunan kecurigaan",
+    "narrative": "Penerapan pada observasi fisik dan detil adegan"
+  },
+  "storyApplications": {
+    "character": "Ide profil karakter berbasis fakta ini",
+    "plot": "Ide alur / investigasi",
+    "conflict": "Ide benturan kepentingan",
+    "twist": "Ide twist rasional",
+    "premises": ["Premis Cerita A", "Premis Cerita B"]
+  },
+  "sources": [
+    { "title": "...", "url": "...", "quality": "..." }
+  ]
+}`;
+
+                    this.updateProgress(`3/3 Menyusun sintesis & aplikasi cerita...`, 85);
+                    const synthesized = await API.callJSON(prompt, true, { timeoutSeconds: 90 });
+
+                    // Ensure verified sources are mapped
+                    synthesized.sources = sources.map(s => ({
+                        title: s.title,
+                        url: s.url,
+                        quality: s.sourceQuality
+                    }));
+                    synthesized.id = generateId('report');
+                    synthesized.researchedAt = Date.now();
+
+                    this.currentResult = synthesized;
+
+                    // Save to research history automatically
+                    let history = Storage.get('wb_research_history', []);
+                    history.unshift(synthesized);
+                    Storage.set('wb_research_history', history.slice(0, 30));
+
+                    this.renderDirectResult(synthesized);
+                    this.renderHistory();
+                    UI.updateDataSummary();
+                    UI.showToast("Riset internet selesai!");
+
+                } catch (e) {
+                    console.error("Research error:", e);
+                    UI.showToast("Riset gagal: " + e.message);
+                } finally {
+                    this.isResearching = false;
+                    this.updateProgress(null, null);
+                    if (btn) btn.disabled = false;
+                }
+            },
+
+            renderDirectResult(r) {
+                const container = document.getElementById('rs-direct-result');
+                if (!container) return;
+
+                const valueColor = r.writingValue === 'HIGH' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : (r.writingValue === 'MEDIUM' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-gray-100 text-gray-800 border-gray-300');
+                const noveltyColor = r.novelty === 'NEW INSIGHT' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-700';
+
+                container.innerHTML = `
+                <div class="card p-5 md:p-6 space-y-4 border-brand-primary/30">
+                    
+                    <!-- Title & Header Badges -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-brand-primary/15 pb-3">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${noveltyColor}">${escapeHTML(r.novelty || 'NEW INSIGHT')}</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${valueColor}">WRITING VALUE: ${escapeHTML(r.writingValue || 'HIGH')}</span>
+                            </div>
+                            <h3 class="text-base md:text-lg font-bold text-brand-text">${escapeHTML(r.topic)}</h3>
+                            <span class="text-[10px] text-brand-muted">Kategori: ${escapeHTML(r.category)} · ${new Date(r.researchedAt).toLocaleString()}</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <button onclick="ResearchEngine.addToWritingBrain('${r.id}')" class="btn-primary px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1">
+                                <span>+ Tambah ke Writing Brain</span>
+                            </button>
+                            <button onclick="ResearchEngine.discussInBrainstorm('${r.id}')" class="btn-secondary px-2.5 py-1.5 rounded-lg text-xs font-medium" title="Bahas di Brainstorm">
+                                <span>Bahas di Chat</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- What Was Found & Key Facts -->
+                    <div class="space-y-2 text-xs">
+                        <h4 class="font-bold text-brand-primary text-xs uppercase tracking-wider">Temuan Fakta dari Internet:</h4>
+                        <p class="text-brand-text leading-relaxed bg-brand-bg/40 p-3 rounded-lg border border-brand-primary/10">${escapeHTML(r.whatWasFound)}</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-2 pt-1">
+                            ${(r.keyKnowledge || []).map(f => `<div class="p-2 bg-white rounded-lg border border-brand-primary/15 text-[11px] leading-snug flex items-start gap-1.5"><span class="text-brand-primary font-bold">•</span><span>${escapeHTML(f)}</span></div>`).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Why It Matters & Writing Value Reason -->
+                    <div class="p-3 bg-brand-primary/5 rounded-xl border border-brand-primary/15 text-xs space-y-1">
+                        <div class="font-bold text-brand-primary">Mengapa Berharga untuk Penulisan:</div>
+                        <p class="text-brand-text/90 leading-relaxed">${escapeHTML(r.writingValueReason || r.whyItMatters)}</p>
+                    </div>
+
+                    <!-- Writing & Story Applications Grid -->
+                    <div class="grid sm:grid-cols-2 gap-3 text-xs pt-1">
+                        <div class="card p-3.5 bg-white space-y-2 border-brand-primary/20">
+                            <h4 class="font-bold text-brand-primary uppercase tracking-wider text-[11px]">Aplikasi Penulisan & Dialog:</h4>
+                            <div class="space-y-1.5 text-[11px] text-brand-text/85">
+                                <p><strong>Dialog:</strong> ${escapeHTML(r.writingApplications?.dialogue || '-')}</p>
+                                <p><strong>Suspense:</strong> ${escapeHTML(r.writingApplications?.suspense || '-')}</p>
+                                <p><strong>Narasi:</strong> ${escapeHTML(r.writingApplications?.narrative || '-')}</p>
+                            </div>
+                        </div>
+
+                        <div class="card p-3.5 bg-white space-y-2 border-brand-primary/20">
+                            <h4 class="font-bold text-brand-primary uppercase tracking-wider text-[11px]">Aplikasi Karakter & Alur:</h4>
+                            <div class="space-y-1.5 text-[11px] text-brand-text/85">
+                                <p><strong>Karakter:</strong> ${escapeHTML(r.storyApplications?.character || '-')}</p>
+                                <p><strong>Twist:</strong> ${escapeHTML(r.storyApplications?.twist || '-')}</p>
+                                <p><strong>Premis Cerita:</strong> ${(r.storyApplications?.premises || []).join(' · ')}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verified Sources Section -->
+                    <div class="border-t border-brand-primary/15 pt-3 space-y-1.5 text-xs">
+                        <h4 class="font-bold text-brand-muted uppercase tracking-wider text-[10px]">Sumber Terverifikasi:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${(r.sources || []).map(s => `
+                                <a href="${escapeHTML(s.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-brand-primary/25 bg-white text-brand-primary hover:bg-brand-bg text-[11px] font-medium transition" title="Buka artikel sumber">
+                                    <span>🔗 ${escapeHTML(s.title)}</span>
+                                    <span class="text-[9px] text-brand-muted">↗</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                </div>`;
+
+                container.classList.remove('hidden');
+                container.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            async runDiscovery() {
+                if (this.isResearching) return;
+                this.isResearching = true;
+                const btn = document.getElementById('btn-run-discovery');
+                if (btn) btn.disabled = true;
+
+                const list = document.getElementById('rs-discovery-list');
+                if (list) list.innerHTML = `<div class="card p-8 text-center text-xs text-brand-primary flex items-center justify-center gap-2"><div class="loader-sm"></div><span>Menjelajahi internet untuk menemukan 3 wawasan baru...</span></div>`;
+
+                const discoveryQueries = [
+                    "unreliable narrator literary techniques",
+                    "distorsi memori saksi mata psikologi",
+                    "prosedur audit forensik korporat",
+                    "transit psychology commuter behavior",
+                    "micro expressions interrogation psychology",
+                    "toko kelontong malam hari urban sociology"
+                ];
+
+                // Pick 2 random queries to explore
+                const shuffled = discoveryQueries.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+                try {
+                    let allSources = [];
+                    for (const q of shuffled) {
+                        const s = await InternetResearchFetcher.fetchInternetSources(q);
+                        allSources = allSources.concat(s);
+                    }
+
+                    const existingKnowledge = Storage.get('wb_knowledge', []);
+                    const knowledgeBrief = existingKnowledge.slice(0, 6).map(k => `- ${k.title}`).join('\n');
+
+                    const sourcePayload = allSources.slice(0, 4).map((s, idx) => `[SUMBER ${idx + 1}]:\nJudul: ${s.title}\nURL: ${s.url}\nCuplikan:\n${s.snippet}`).join('\n\n');
+
+                    const prompt = `Anda adalah Discovery Engine "Realistic Metro-Pop Mystery".
+Berdasarkan sumber-sumber nyata di bawah ini, ekstrak 3 penemuan wawasan/fenomena baru yang belum umum di Writing Brain:
+Knowledge yang sudah ada:\n${knowledgeBrief}
+
+Sumber Nyata:\n${sourcePayload}
+
+Kembalikan HANYA JSON Array of Objects:
+[
+  {
+    "topic": "Judul Wawasan/Fenomena",
+    "summary": "Penjelasan ringkas fenomena atau teknik",
+    "whyInteresting": "Mengapa ini menarik untuk cerita misteri realistis",
+    "writingValue": "HIGH",
+    "writingApplications": "Penerapan pada narasi atau karakter",
+    "sourceTitle": "${allSources[0]?.title || 'Wikipedia'}",
+    "sourceUrl": "${allSources[0]?.url || 'https://id.wikipedia.org'}"
+  }
+]`;
+
+                    const results = await API.callJSON(prompt, true);
+                    const discoveries = Array.isArray(results) ? results : [results];
+
+                    if (list) {
+                        list.innerHTML = discoveries.map((d, idx) => `
+                        <div class="card p-4 space-y-2.5 border-brand-primary/25 text-xs">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">DISCOVERY #${idx + 1}</span>
+                                    <h4 class="font-bold text-sm text-brand-text mt-1">${escapeHTML(d.topic)}</h4>
+                                </div>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">VALUE: ${escapeHTML(d.writingValue || 'HIGH')}</span>
+                            </div>
+                            <p class="text-brand-text/85 leading-relaxed">${escapeHTML(d.summary)}</p>
+                            <p class="text-[11px] text-brand-muted"><strong>Potensi Cerita:</strong> ${escapeHTML(d.whyInteresting || d.writingApplications)}</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-brand-primary/10">
+                                <a href="${escapeHTML(d.sourceUrl)}" target="_blank" class="text-[11px] text-brand-primary hover:underline">🔗 Sumber: ${escapeHTML(d.sourceTitle)} ↗</a>
+                                <button onclick="ResearchEngine.addDiscoveryToWritingBrain(${JSON.stringify(d).replace(/"/g, '&quot;')})" class="btn-primary px-3 py-1 rounded text-xs font-bold">+ Tambah ke Brain</button>
+                            </div>
+                        </div>`).join('');
+                    }
+
+                    UI.showToast("3 penemuan baru berhasil didapatkan!");
+
+                } catch (e) {
+                    console.error("Discovery error:", e);
+                    if (list) list.innerHTML = `<div class="card p-6 text-center text-xs text-red-500">Gagal melakukan discovery: ${escapeHTML(e.message)}</div>`;
+                } finally {
+                    this.isResearching = false;
+                    if (btn) btn.disabled = false;
+                }
+            },
+
+            addDiscoveryToWritingBrain(d) {
+                const kb = Storage.get('wb_knowledge', []);
+                const newEntry = {
+                    id: generateId('kb'),
+                    title: d.topic,
+                    summary: `${d.summary} [Aplikasi: ${d.writingApplications || d.whyInteresting}]`,
+                    type: 'research_knowledge',
+                    source: "Internet Research",
+                    sourceTitle: d.sourceTitle,
+                    sourceUrl: d.sourceUrl,
+                    writingValue: d.writingValue || 'HIGH',
+                    discoveredAt: Date.now(),
+                    lastVerifiedAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                kb.unshift(newEntry);
+                Storage.set('wb_knowledge', kb);
+                WritingBrainUI.render();
+                UI.updateDataSummary();
+                UI.showToast(`"${d.topic}" ditambahkan ke Writing Brain!`);
+            },
+
+            addToWritingBrain(reportId) {
+                const report = (this.currentResult && this.currentResult.id === reportId) 
+                    ? this.currentResult 
+                    : Storage.get('wb_research_history', []).find(r => r.id === reportId);
+
+                if (!report) return;
+
+                const kb = Storage.get('wb_knowledge', []);
+                const primarySource = (report.sources && report.sources.length > 0) ? report.sources[0] : null;
+
+                const newEntry = {
+                    id: generateId('kb'),
+                    title: report.topic,
+                    summary: `${report.whatWasFound} (Aplikasi: ${report.writingValueReason || report.whyItMatters})`,
+                    type: 'research_knowledge',
+                    source: "Internet Research",
+                    sourceTitle: primarySource?.title || "Internet Research",
+                    sourceUrl: primarySource?.url || "https://id.wikipedia.org",
+                    writingValue: report.writingValue || "HIGH",
+                    discoveredAt: report.researchedAt || Date.now(),
+                    lastVerifiedAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+
+                kb.unshift(newEntry);
+                Storage.set('wb_knowledge', kb);
+                WritingBrainUI.render();
+                UI.updateDataSummary();
+                UI.showToast("Hasil riset berhasil disimpan ke Writing Brain!");
+            },
+
+            discussInBrainstorm(reportId) {
+                const report = (this.currentResult && this.currentResult.id === reportId) 
+                    ? this.currentResult 
+                    : Storage.get('wb_research_history', []).find(r => r.id === reportId);
+
+                if (!report) return;
+
+                UI.navigateTo('brainstorm');
+                Brainstorm.createNewSession({
+                    title: `Riset: ${report.topic}`
+                });
+
+                const msg = `Saya ingin mendiskusikan hasil riset internet berikut untuk cerita baru:\n\nTopik: ${report.topic}\nFakta: ${report.whatWasFound}\n\nBagaimana cara terbaik menganyam fakta ini ke dalam alur misteri realistis?`;
+                const input = document.getElementById('bs-input');
+                if (input) {
+                    input.value = msg;
+                    setTimeout(() => Brainstorm.sendMessage(), 100);
+                }
+            },
+
+            addToQueue() {
+                const input = document.getElementById('rs-queue-input');
+                const val = input ? input.value.trim() : '';
+                if (!val) return;
+
+                let queue = Storage.get('wb_research_queue', []);
+                queue.unshift({
+                    id: generateId('q'),
+                    topic: val,
+                    category: 'General Mystery & Reality',
+                    addedAt: Date.now()
+                });
+                Storage.set('wb_research_queue', queue);
+                input.value = '';
+                this.renderQueue();
+                UI.showToast("Topik ditambahkan ke antrean riset.");
+            },
+
+            removeQueueItem(id) {
+                let queue = Storage.get('wb_research_queue', []).filter(q => q.id !== id);
+                Storage.set('wb_research_queue', queue);
+                this.renderQueue();
+            },
+
+            runQueueItem(topic, category) {
+                this.switchSubTab('direct');
+                const queryInput = document.getElementById('rs-direct-query');
+                if (queryInput) queryInput.value = topic;
+                this.runDirectResearch(topic, category);
+            },
+
+            renderQueue() {
+                const queue = Storage.get('wb_research_queue', []);
+                const container = document.getElementById('rs-queue-list');
+                const countBadge = document.getElementById('queue-badge-count');
+
+                if (countBadge) countBadge.textContent = queue.length;
+                if (!container) return;
+
+                if (queue.length === 0) {
+                    container.innerHTML = `<div class="card p-6 text-center text-xs text-brand-muted">Antrean riset kosong. Masukkan topik yang ingin diriset nanti di atas.</div>`;
+                    return;
+                }
+
+                container.innerHTML = queue.map(q => `
+                <div class="card p-3 flex justify-between items-center text-xs hover:border-brand-primary/30 transition">
+                    <div>
+                        <h4 class="font-bold text-brand-text">${escapeHTML(q.topic)}</h4>
+                        <span class="text-[10px] text-brand-muted">${escapeHTML(q.category || 'General')} · ${new Date(q.addedAt).toLocaleDateString()}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="ResearchEngine.runQueueItem('${escapeHTML(q.topic)}', '${escapeHTML(q.category)}')" class="btn-primary px-3 py-1 rounded text-xs font-bold">Riset Sekarang</button>
+                        <button onclick="ResearchEngine.removeQueueItem('${q.id}')" class="text-brand-muted hover:text-red-600 p-1 text-xs">✕</button>
+                    </div>
+                </div>`).join('');
+            },
+
+            renderHistory() {
+                const history = Storage.get('wb_research_history', []);
+                const container = document.getElementById('rs-history-list');
+                const countEl = document.getElementById('rs-history-count');
+
+                if (countEl) countEl.textContent = `${history.length} laporan`;
+                if (!container) return;
+
+                if (history.length === 0) {
+                    container.innerHTML = `<div class="col-span-2 card p-6 text-center text-xs text-brand-muted">Belum ada laporan riset. Mulai riset pertamamu di tab Direct Research.</div>`;
+                    return;
+                }
+
+                container.innerHTML = history.map(r => `
+                <div class="card p-3.5 flex flex-col justify-between hover:border-brand-primary/40 transition text-xs space-y-2">
+                    <div>
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-primary/10 text-brand-primary">${escapeHTML(r.category || 'Riset')}</span>
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">${escapeHTML(r.writingValue || 'HIGH')}</span>
+                        </div>
+                        <h4 class="font-bold text-xs text-brand-text mb-1 cursor-pointer hover:text-brand-primary" onclick="ResearchEngine.viewHistoricalReport('${r.id}')">${escapeHTML(r.topic)}</h4>
+                        <p class="text-[11px] text-brand-text/80 line-clamp-2 leading-relaxed">${escapeHTML(r.whatWasFound || '')}</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-brand-primary/10 text-[10px]">
+                        <span class="text-brand-muted">${new Date(r.researchedAt).toLocaleDateString()}</span>
+                        <div class="flex gap-1.5">
+                            <button onclick="ResearchEngine.viewHistoricalReport('${r.id}')" class="text-brand-primary font-bold hover:underline">Buka Laporan →</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            },
+
+            viewHistoricalReport(id) {
+                const report = Storage.get('wb_research_history', []).find(r => r.id === id);
+                if (!report) return;
+                this.switchSubTab('direct');
+                this.currentResult = report;
+                this.renderDirectResult(report);
+            },
+
+            searchLocalKnowledgeFromQuery() {
+                const query = document.getElementById('rs-direct-query')?.value.trim();
+                UI.navigateTo('brain');
+                if (query) {
+                    WritingBrainUI.currentFilter = 'all';
+                    WritingBrainUI.render();
+                    UI.showToast(`Menampilkan Writing Brain lokal untuk "${query}"`);
+                }
+            }
+        };
+
+        // ============================================================================
+        // 4. BACKUP & EXPORT/IMPORT ENGINE (Password-Protected ZIP with Research)
         // ============================================================================
         const BackupEngine = {
             isProcessing: false,
@@ -1121,7 +1847,8 @@ TUGAS ANDA:
                     const stories = Storage.get('ceritametro_history', []);
                     const brainstorm = Storage.get('wb_brainstorm_sessions', []);
                     const knowledge = Storage.get('wb_knowledge', []);
-                    const research = Storage.get('wb_research', []);
+                    const researchHistory = Storage.get('wb_research_history', []);
+                    const researchQueue = Storage.get('wb_research_queue', []);
                     const userMemory = Storage.get('wb_user_profile', { preferences: [] });
                     const permissions = Storage.get('wb_memory_permissions', { suggest: true, autoPref: false });
                     const aiCfg = Storage.get('wb_ai_config', {});
@@ -1136,7 +1863,7 @@ TUGAS ANDA:
                             stories: stories.length,
                             brainstormSessions: brainstorm.length,
                             knowledge: knowledge.length,
-                            research: research.length,
+                            research: researchHistory.length,
                             memory: (userMemory.preferences || []).length
                         }
                     };
@@ -1147,11 +1874,15 @@ TUGAS ANDA:
                         selectedModel: aiCfg.selectedModel || "gpt-4o-mini"
                     };
 
+                    const researchData = {
+                        history: researchHistory,
+                        queue: researchQueue
+                    };
+
                     this.updateProgress("Mengemas data & mengenkripsi ZIP...");
 
                     let blob = null;
 
-                    // 1. Primary: Use @zip.js/zip.js with Password Encryption
                     if (typeof zip !== 'undefined' && zip.ZipWriter) {
                         const blobWriter = new zip.BlobWriter("application/zip");
                         const zipWriter = new zip.ZipWriter(blobWriter, { password: BACKUP_PASS, encryptionStrength: 3 });
@@ -1161,24 +1892,20 @@ TUGAS ANDA:
                         await zipWriter.add("brainstorm/sessions.json", new zip.TextReader(JSON.stringify(brainstorm, null, 2)));
                         await zipWriter.add("brain/knowledge.json", new zip.TextReader(JSON.stringify(knowledge, null, 2)));
                         await zipWriter.add("memory/user-memory.json", new zip.TextReader(JSON.stringify(userMemory, null, 2)));
-                        await zipWriter.add("research/research.json", new zip.TextReader(JSON.stringify(research, null, 2)));
+                        await zipWriter.add("research/research.json", new zip.TextReader(JSON.stringify(researchData, null, 2)));
                         await zipWriter.add("settings/preferences.json", new zip.TextReader(JSON.stringify(preferences, null, 2)));
                         
                         blob = await zipWriter.close();
-                    } 
-                    // 2. Fallback: JSZip if zip.js is unavailable
-                    else if (typeof JSZip !== 'undefined') {
+                    } else if (typeof JSZip !== 'undefined') {
                         const jszip = new JSZip();
                         jszip.file("manifest.json", JSON.stringify(manifest, null, 2));
                         jszip.folder("stories").file("stories.json", JSON.stringify(stories, null, 2));
                         jszip.folder("brainstorm").file("sessions.json", JSON.stringify(brainstorm, null, 2));
                         jszip.folder("brain").file("knowledge.json", JSON.stringify(knowledge, null, 2));
                         jszip.folder("memory").file("user-memory.json", JSON.stringify(userMemory, null, 2));
-                        jszip.folder("research").file("research.json", JSON.stringify(research, null, 2));
+                        jszip.folder("research").file("research.json", JSON.stringify(researchData, null, 2));
                         jszip.folder("settings").file("preferences.json", JSON.stringify(preferences, null, 2));
                         blob = await jszip.generateAsync({ type: "blob" });
-                    } else {
-                        throw new Error("Library ZIP tidak tersedia di browser.");
                     }
 
                     this.updateProgress("Selesai.");
@@ -1201,7 +1928,7 @@ TUGAS ANDA:
                 } finally {
                     this.isProcessing = false;
                     if (btn) btn.disabled = false;
-                    setTimeout(() => this.updateProgress(null), 2500);
+                    setTimeout(() => this.updateProgress(null), 2000);
                 }
             },
 
@@ -1213,14 +1940,12 @@ TUGAS ANDA:
                 try {
                     let files = {};
 
-                    // Try reading with zip.js
                     if (typeof zip !== 'undefined' && zip.ZipReader) {
                         let zipReader = new zip.ZipReader(new zip.BlobReader(file), { password: BACKUP_PASS });
                         let entries = [];
                         try {
                             entries = await zipReader.getEntries();
-                        } catch (errPass) {
-                            // If default password fails, prompt user
+                        } catch {
                             const inputPass = prompt("Masukkan password backup ZIP:", BACKUP_PASS);
                             if (!inputPass) throw new Error("Password diperlukan untuk membuka backup.");
                             zipReader = new zip.ZipReader(new zip.BlobReader(file), { password: inputPass });
@@ -1242,19 +1967,21 @@ TUGAS ANDA:
                         }
                     }
 
-                    // Parse JSON structures
                     const parseJson = (key, def) => {
                         try { return files[key] ? JSON.parse(files[key]) : def; } catch { return def; }
                     };
 
                     const manifest = parseJson("manifest.json", null);
-                    if (!manifest) throw new Error("Format berkas backup tidak valid (manifest.json tidak ditemukan).");
+                    if (!manifest) throw new Error("Format backup tidak valid (manifest.json tidak ditemukan).");
 
-                    // Support both new & legacy folder paths for full backwards-compatibility
                     const stories = parseJson("stories/stories.json", parseJson("stories.json", []));
                     const brainstorm = parseJson("brainstorm/sessions.json", []);
                     const knowledge = parseJson("brain/knowledge.json", parseJson("memory/knowledge.json", []));
-                    const research = parseJson("research/research.json", []);
+                    
+                    const rawResearch = parseJson("research/research.json", []);
+                    const researchHistory = Array.isArray(rawResearch) ? rawResearch : (rawResearch.history || []);
+                    const researchQueue = rawResearch.queue || [];
+
                     const userMemory = parseJson("memory/user-memory.json", parseJson("memory/profile.json", { preferences: [] }));
 
                     this.pendingImportData = {
@@ -1262,21 +1989,21 @@ TUGAS ANDA:
                         stories: stories,
                         brainstorm: brainstorm,
                         knowledge: knowledge,
-                        research: research,
+                        researchHistory: researchHistory,
+                        researchQueue: researchQueue,
                         userMemory: userMemory
                     };
 
-                    // Show preview modal
                     document.getElementById('prev-created').textContent = manifest.createdAt ? new Date(manifest.createdAt).toLocaleString() : 'Tidak diketahui';
                     document.getElementById('prev-stories').textContent = stories.length;
                     document.getElementById('prev-brainstorm').textContent = brainstorm.length;
                     document.getElementById('prev-knowledge').textContent = knowledge.length;
-                    document.getElementById('prev-research').textContent = research.length;
+                    document.getElementById('prev-research').textContent = researchHistory.length;
 
                     document.getElementById('import-preview-modal').classList.remove('hidden');
 
                 } catch (e) {
-                    console.error("Import read error:", e);
+                    console.error("Import error:", e);
                     UI.showToast("Gagal membaca backup: " + e.message);
                 } finally {
                     event.target.value = '';
@@ -1302,100 +2029,81 @@ TUGAS ANDA:
                         Storage.set('ceritametro_history', this.pendingImportData.stories);
                         Storage.set('wb_brainstorm_sessions', this.pendingImportData.brainstorm);
                         Storage.set('wb_knowledge', this.pendingImportData.knowledge);
-                        Storage.set('wb_research', this.pendingImportData.research);
+                        Storage.set('wb_research_history', this.pendingImportData.researchHistory);
+                        Storage.set('wb_research_queue', this.pendingImportData.researchQueue);
                         Storage.set('wb_user_profile', this.pendingImportData.userMemory);
-                        UI.showToast("Data berhasil dipulihkan (Mode Replace). Menyegarkan...");
-                        setTimeout(() => location.reload(), 800);
+                        UI.showToast("Data berhasil dipulihkan (Mode Replace).");
+                        setTimeout(() => location.reload(), 600);
                     }
                     return;
                 }
 
-                // MODE: MERGE SAFELY WITH CONFLICT DETECTION
-                const currentStories = Storage.get('ceritametro_history', []);
-                const currentBrainstorm = Storage.get('wb_brainstorm_sessions', []);
-                const currentKnowledge = Storage.get('wb_knowledge', []);
-                const currentResearch = Storage.get('wb_research', []);
-                const currentMemory = Storage.get('wb_user_profile', { preferences: [] });
+                // MERGE SAFELY
+                const curStories = Storage.get('ceritametro_history', []);
+                const curBrainstorm = Storage.get('wb_brainstorm_sessions', []);
+                const curKnowledge = Storage.get('wb_knowledge', []);
+                const curResHistory = Storage.get('wb_research_history', []);
+                const curResQueue = Storage.get('wb_research_queue', []);
+                const curMemory = Storage.get('wb_user_profile', { preferences: [] });
 
                 this.activeConflicts = [];
 
-                // 1. Stories Merge & Conflict Check
-                const mergedStories = [...currentStories];
-                for (const incStory of this.pendingImportData.stories) {
-                    const existingIdx = mergedStories.findIndex(s => s.id === incStory.id);
-                    if (existingIdx === -1) {
-                        mergedStories.push(incStory);
-                    } else {
-                        const curStory = mergedStories[existingIdx];
-                        // If content differs significantly, raise conflict
-                        if (curStory.story !== incStory.story || curStory.title !== incStory.title) {
-                            this.activeConflicts.push({
-                                type: 'story',
-                                id: incStory.id,
-                                title: incStory.title || curStory.title,
-                                local: curStory,
-                                backup: incStory
-                            });
-                        }
+                const mergedStories = [...curStories];
+                for (const inc of this.pendingImportData.stories) {
+                    const idx = mergedStories.findIndex(s => s.id === inc.id);
+                    if (idx === -1) mergedStories.push(inc);
+                    else if (mergedStories[idx].story !== inc.story) {
+                        this.activeConflicts.push({ type: 'story', id: inc.id, title: inc.title, local: mergedStories[idx], backup: inc });
                     }
                 }
 
-                // 2. Brainstorm Sessions Merge (Per message ID)
-                const mergedSessions = [...currentBrainstorm];
-                for (const incSession of this.pendingImportData.brainstorm) {
-                    const existingIdx = mergedSessions.findIndex(s => s.id === incSession.id);
-                    if (existingIdx === -1) {
-                        mergedSessions.push(incSession);
-                    } else {
-                        const curSession = mergedSessions[existingIdx];
-                        // Merge messages by unique message.id
-                        const allMsgs = [...(curSession.messages || [])];
-                        for (const m of (incSession.messages || [])) {
-                            if (!allMsgs.some(existingM => existingM.id === m.id)) {
-                                allMsgs.push(m);
-                            }
+                const mergedSessions = [...curBrainstorm];
+                for (const inc of this.pendingImportData.brainstorm) {
+                    const idx = mergedSessions.findIndex(s => s.id === inc.id);
+                    if (idx === -1) mergedSessions.push(inc);
+                    else {
+                        const allMsgs = [...(mergedSessions[idx].messages || [])];
+                        for (const m of (inc.messages || [])) {
+                            if (!allMsgs.some(em => em.id === m.id)) allMsgs.push(m);
                         }
-                        curSession.messages = allMsgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-                        if (!curSession.summary && incSession.summary) curSession.summary = incSession.summary;
+                        mergedSessions[idx].messages = allMsgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
                     }
                 }
 
-                // 3. Knowledge & Research Merge
-                const mergedKnowledge = [...currentKnowledge];
+                const mergedKnowledge = [...curKnowledge];
                 for (const k of this.pendingImportData.knowledge) {
-                    if (!mergedKnowledge.some(existingK => existingK.id === k.id || (existingK.title === k.title && existingK.type === k.type))) {
-                        mergedKnowledge.push(k);
-                    }
+                    if (!mergedKnowledge.some(ek => ek.id === k.id || ek.title === k.title)) mergedKnowledge.push(k);
                 }
 
-                const mergedResearch = [...currentResearch];
-                for (const r of this.pendingImportData.research) {
-                    if (!mergedResearch.some(existingR => existingR.id === r.id || existingR.title === r.title)) {
-                        mergedResearch.push(r);
-                    }
+                const mergedResHistory = [...curResHistory];
+                for (const rh of this.pendingImportData.researchHistory) {
+                    if (!mergedResHistory.some(erh => erh.id === rh.id || erh.topic === rh.topic)) mergedResHistory.push(rh);
                 }
 
-                // 4. Memory Preferences Merge
-                const mergedPrefs = [...new Set([...(currentMemory.preferences || []), ...(this.pendingImportData.userMemory.preferences || [])])];
+                const mergedResQueue = [...curResQueue];
+                for (const rq of this.pendingImportData.researchQueue) {
+                    if (!mergedResQueue.some(erq => erq.id === rq.id || erq.topic === rq.topic)) mergedResQueue.push(rq);
+                }
 
-                // If conflicts detected, prompt resolution modal
+                const mergedPrefs = [...new Set([...(curMemory.preferences || []), ...(this.pendingImportData.userMemory.preferences || [])])];
+
                 if (this.activeConflicts.length > 0) {
-                    this.renderConflictModal(mergedStories, mergedSessions, mergedKnowledge, mergedResearch, { preferences: mergedPrefs });
+                    this.renderConflictModal(mergedStories, mergedSessions, mergedKnowledge, mergedResHistory, mergedResQueue, { preferences: mergedPrefs });
                     return;
                 }
 
-                // Save merged data
                 Storage.set('ceritametro_history', mergedStories);
                 Storage.set('wb_brainstorm_sessions', mergedSessions);
                 Storage.set('wb_knowledge', mergedKnowledge);
-                Storage.set('wb_research', mergedResearch);
+                Storage.set('wb_research_history', mergedResHistory);
+                Storage.set('wb_research_queue', mergedResQueue);
                 Storage.set('wb_user_profile', { preferences: mergedPrefs });
 
                 UI.showToast("Data berhasil digabungkan dengan aman!");
                 setTimeout(() => location.reload(), 600);
             },
 
-            renderConflictModal(mergedStories, mergedSessions, mergedKnowledge, mergedResearch, mergedMemory) {
+            renderConflictModal(mergedStories, mergedSessions, mergedKnowledge, mergedResHistory, mergedResQueue, mergedMemory) {
                 const container = document.getElementById('conflict-items-container');
                 if (!container) return;
 
@@ -1403,17 +2111,10 @@ TUGAS ANDA:
                 <div class="card p-3 border-amber-200 bg-amber-50/50 space-y-2">
                     <div class="font-bold text-xs text-brand-primary flex justify-between">
                         <span>Konflik #${idx + 1}: ${escapeHTML(c.title)}</span>
-                        <span class="text-[10px] text-amber-800 uppercase font-semibold">${c.type}</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-[10px]">
-                        <div class="bg-white p-2 rounded border border-gray-200">
-                            <strong>Versi Lokal:</strong>
-                            <p class="text-brand-muted truncate mt-0.5">${escapeHTML((c.local.story || c.local.title || '').substring(0, 80))}...</p>
-                        </div>
-                        <div class="bg-white p-2 rounded border border-amber-300">
-                            <strong>Versi Backup:</strong>
-                            <p class="text-brand-muted truncate mt-0.5">${escapeHTML((c.backup.story || c.backup.title || '').substring(0, 80))}...</p>
-                        </div>
+                        <div class="bg-white p-2 rounded border"><strong>Versi Lokal:</strong><p class="truncate mt-0.5">${escapeHTML((c.local.story || '').substring(0, 80))}...</p></div>
+                        <div class="bg-white p-2 rounded border border-amber-300"><strong>Versi Backup:</strong><p class="truncate mt-0.5">${escapeHTML((c.backup.story || '').substring(0, 80))}...</p></div>
                     </div>
                     <div class="flex gap-1.5 pt-1">
                         <button onclick="BackupEngine.resolveSingleConflict(${idx}, 'local')" class="btn-secondary flex-1 py-1 rounded text-[10px]">Gunakan Lokal</button>
@@ -1422,7 +2123,7 @@ TUGAS ANDA:
                     </div>
                 </div>`).join('');
 
-                this._tempMerged = { mergedStories, mergedSessions, mergedKnowledge, mergedResearch, mergedMemory };
+                this._tempMerged = { mergedStories, mergedSessions, mergedKnowledge, mergedResHistory, mergedResQueue, mergedMemory };
                 document.getElementById('conflict-modal').classList.remove('hidden');
             },
 
@@ -1434,16 +2135,11 @@ TUGAS ANDA:
                     const storyIdx = this._tempMerged.mergedStories.findIndex(s => s.id === c.id);
                     if (storyIdx > -1) this._tempMerged.mergedStories[storyIdx] = c.backup;
                 } else if (choice === 'both') {
-                    const copyBackup = { ...c.backup, id: generateId('story'), title: `${c.backup.title} (Salinan Backup)` };
-                    this._tempMerged.mergedStories.push(copyBackup);
+                    this._tempMerged.mergedStories.push({ ...c.backup, id: generateId('story'), title: `${c.backup.title} (Backup)` });
                 }
 
                 this.activeConflicts.splice(idx, 1);
-                if (this.activeConflicts.length === 0) {
-                    this.commitResolved();
-                } else {
-                    this.renderConflictModal(this._tempMerged.mergedStories, this._tempMerged.mergedSessions, this._tempMerged.mergedKnowledge, this._tempMerged.mergedResearch, this._tempMerged.mergedMemory);
-                }
+                if (this.activeConflicts.length === 0) this.commitResolved();
             },
 
             resolveAllConflicts(choice) {
@@ -1462,17 +2158,18 @@ TUGAS ANDA:
                 Storage.set('ceritametro_history', this._tempMerged.mergedStories);
                 Storage.set('wb_brainstorm_sessions', this._tempMerged.mergedSessions);
                 Storage.set('wb_knowledge', this._tempMerged.mergedKnowledge);
-                Storage.set('wb_research', this._tempMerged.mergedResearch);
+                Storage.set('wb_research_history', this._tempMerged.mergedResHistory);
+                Storage.set('wb_research_queue', this._tempMerged.mergedResQueue);
                 Storage.set('wb_user_profile', this._tempMerged.mergedMemory);
                 
                 document.getElementById('conflict-modal').classList.add('hidden');
-                UI.showToast("Semua konflik telah diselesaikan & disimpan.");
+                UI.showToast("Semua konflik diselesaikan & disimpan.");
                 setTimeout(() => location.reload(), 600);
             }
         };
 
         // ============================================================================
-        // 3. PROVIDER MANAGER (OpenAI-Compatible AI Gateway Exclusively)
+        // 5. PROVIDER MANAGER (OpenAI-Compatible Gateway)
         // ============================================================================
         const ProviderManager = {
             config: {
@@ -1610,10 +2307,9 @@ TUGAS ANDA:
                             passed = true;
                         }
                     } catch (e) {
-                        console.warn("GET /models fallback to chat probe:", e);
+                        console.warn("GET /models fallback:", e);
                     }
 
-                    // Fallback to chat completions probe
                     if (!passed) {
                         const targetModel = this.config.selectedModel || "gpt-4o-mini";
                         const probeRes = await fetch(`${baseUrl}/chat/completions`, {
@@ -1638,7 +2334,7 @@ TUGAS ANDA:
                     Storage.set('wb_ai_config', this.config);
                     this.updateUI();
                     if (diag) diag.innerHTML = `<span class="text-emerald-700 font-bold">✓ Terhubung!</span> Ditemukan ${this.config.models.length} model.`;
-                    UI.showToast("Koneksi OpenAI-Compatible berhasil!");
+                    UI.showToast("Koneksi AI berhasil!");
 
                 } catch (e) {
                     console.error("AI probe error:", e);
@@ -1654,7 +2350,7 @@ TUGAS ANDA:
         };
 
         // ============================================================================
-        // 4. API CALL GATEWAY (POST /chat/completions)
+        // 6. API CALL GATEWAY
         // ============================================================================
         const API = {
             activeController: null,
@@ -1727,9 +2423,9 @@ TUGAS ANDA:
                     return (out || "").trim();
 
                 } catch (e) {
-                    if (e.name === 'AbortError') throw new Error("Generasi AI dihentikan atau melebihi waktu batas.");
+                    if (e.name === 'AbortError') throw new Error("Generasi AI dihentikan.");
                     if (e.name === 'TypeError' || (e.message && e.message.includes('Failed to fetch'))) {
-                        throw new Error("Gagal terhubung (Periksa koneksi internet atau izin CORS).");
+                        throw new Error("Gagal terhubung ke endpoint AI.");
                     }
                     throw e;
                 } finally {
@@ -1753,13 +2449,13 @@ TUGAS ANDA:
                     if (objMatch) {
                         try { return JSON.parse(objMatch[0]); } catch {}
                     }
-                    throw new Error("Format respon AI tidak dapat dibaca sebagai JSON. Coba lagi.");
+                    throw new Error("Respon AI tidak dapat dibaca sebagai format JSON.");
                 }
             }
         };
 
         // ============================================================================
-        // 5. USER MEMORY & WRITING BRAIN STORE
+        // 7. USER MEMORY & WRITING BRAIN STORE
         // ============================================================================
         const UserMemory = {
             profile: { preferences: [] },
@@ -1822,9 +2518,9 @@ TUGAS ANDA:
                     ? allKnowledge.filter(k => k.title.toLowerCase().includes(qLower) || k.summary.toLowerCase().includes(qLower)).slice(0, 3)
                     : allKnowledge.slice(0, 3);
 
-                const allResearch = Storage.get('wb_research', []);
+                const allResearch = Storage.get('wb_research_history', []);
                 const relResearch = qLower
-                    ? allResearch.filter(r => r.title.toLowerCase().includes(qLower) || r.summary.toLowerCase().includes(qLower)).slice(0, 2)
+                    ? allResearch.filter(r => r.topic.toLowerCase().includes(qLower) || (r.whatWasFound && r.whatWasFound.toLowerCase().includes(qLower))).slice(0, 2)
                     : allResearch.slice(0, 2);
 
                 let currentStory = null;
@@ -1850,7 +2546,7 @@ TUGAS ANDA:
                     out += `[WRITING BRAIN RULES]:\n${ctx.knowledge.map(k => `- ${k.title}: ${k.summary}`).join('\n')}\n\n`;
                 }
                 if (ctx.research && ctx.research.length > 0) {
-                    out += `[RELEVANT URBAN RESEARCH]:\n${ctx.research.map(r => `- ${r.title}: ${r.summary}`).join('\n')}\n\n`;
+                    out += `[VERIFIED INTERNET RESEARCH]:\n${ctx.research.map(r => `- ${r.topic}: ${r.whatWasFound || ''}`).join('\n')}\n\n`;
                 }
                 if (ctx.currentStory) {
                     out += `[CURRENT STORY]:\nTitle: ${ctx.currentStory.title}\nPremise: ${ctx.currentStory.storyOutline?.premise || 'N/A'}\n\n`;
@@ -1863,7 +2559,7 @@ TUGAS ANDA:
         };
 
         // ============================================================================
-        // 6. BRAINSTORMING STORE & CHAT WORKSPACE
+        // 8. BRAINSTORMING STORE & CHAT WORKSPACE
         // ============================================================================
         const BrainstormStore = {
             getSessions() {
@@ -1898,7 +2594,7 @@ TUGAS ANDA:
             createNewSession(initialContext = null) {
                 this.activeSession = {
                     id: generateId('bs'),
-                    title: initialContext?.title ? `Diskusi: ${initialContext.title}` : "Percakapan Baru",
+                    title: initialContext?.title ? initialContext.title : "Percakapan Baru",
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     messages: [],
@@ -1992,7 +2688,7 @@ TUGAS ANDA:
                         .map(m => ({ role: m.role, content: m.text }));
 
                     let systemFullPrompt = BRAINSTORM_INSTRUCTION;
-                    if (promptContext) systemFullPrompt += `\n\n--- KONTEKS AKTIF ---\n${promptContext}`;
+                    if (promptContext) systemFullPrompt += `\n\n--- KONTEKS AKTIF & RISET ---\n${promptContext}`;
 
                     const response = await API.call(text, true, {
                         messages: recentMsgs,
@@ -2148,7 +2844,7 @@ TUGAS ANDA:
                         </div>
                         <div>
                             <h3 class="font-bold text-brand-text text-sm">Mulai Diskusi Menulis</h3>
-                            <p class="text-xs text-brand-muted mt-0.5">Uji ide cerita, cari celah alibi, atau rancang plot twist rasional.</p>
+                            <p class="text-xs text-brand-muted mt-0.5">Uji ide cerita, cari celah alibi, atau integrasikan hasil riset internet.</p>
                         </div>
                         <div class="grid grid-cols-1 gap-1.5 w-full pt-1 text-xs">
                             <button onclick="Brainstorm.sendShortcut('Saya punya ide tentang seorang auditor yang menemukan faktur fiktif berulang di malam hari...')" class="p-2 rounded-lg border border-brand-primary/15 bg-white text-left hover:border-brand-primary transition">
@@ -2394,7 +3090,7 @@ TUGAS ANDA:
         };
 
         // ============================================================================
-        // 7. STORY ENGINE & WIZARD (Pipeline)
+        // 9. STORY ENGINE & WIZARD (Pipeline)
         // ============================================================================
         const State = {
             currentSession: {
@@ -2821,14 +3517,14 @@ Kembalikan HANYA JSON:
         };
 
         // ============================================================================
-        // 8. WRITING BRAIN & RESEARCH UI CONTROLLERS
+        // 10. WRITING BRAIN UI CONTROLLER
         // ============================================================================
         const WritingBrainUI = {
             currentFilter: 'all',
 
             setFilter(tab) {
                 this.currentFilter = tab;
-                ['all', 'preference', 'pattern', 'principles'].forEach(t => {
+                ['all', 'preference', 'pattern', 'principles', 'research_knowledge'].forEach(t => {
                     const el = document.getElementById(`wb-tab-${t}`);
                     if (el) {
                         if (t === tab) el.className = "px-3 py-1 rounded-lg bg-brand-primary text-white font-semibold";
@@ -2864,17 +3560,25 @@ Kembalikan HANYA JSON:
 
                 container.innerHTML = filtered.map(item => {
                     const isPref = item.id.startsWith('pref_');
-                    const badgeLabel = item.type === 'preference' ? 'Gaya Saya' : (item.type === 'pattern' ? 'Pola Cerita' : 'Prinsip');
+                    const badgeLabel = item.type === 'preference' ? 'Gaya Saya' : (item.type === 'pattern' ? 'Pola Cerita' : (item.type === 'research_knowledge' ? '🌐 Dari Riset Internet' : 'Prinsip'));
+                    const badgeColor = item.type === 'research_knowledge' ? 'bg-emerald-100 text-emerald-800' : 'bg-brand-primary/10 text-brand-primary';
 
                     return `
                     <div class="card p-3.5 flex flex-col justify-between hover:border-brand-primary/40 transition text-xs">
                         <div>
                             <div class="flex justify-between items-start mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-primary/10 text-brand-primary">${badgeLabel}</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}">${badgeLabel}</span>
                                 <button onclick="WritingBrainUI.deleteEntry('${item.id}')" class="text-brand-muted hover:text-red-600 p-0.5" title="Hapus">✕</button>
                             </div>
                             <h4 class="font-bold text-xs text-brand-text mb-1">${escapeHTML(item.title)}</h4>
                             <p class="text-[11px] text-brand-text/80 leading-relaxed">${escapeHTML(item.summary)}</p>
+                            ${item.sourceUrl ? `
+                                <div class="mt-2 pt-1.5 border-t border-brand-primary/10">
+                                    <a href="${escapeHTML(item.sourceUrl)}" target="_blank" class="text-[10px] text-brand-primary hover:underline flex items-center gap-1">
+                                        <span>🔗 Sumber: ${escapeHTML(item.sourceTitle || 'Internet')} ↗</span>
+                                    </a>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>`;
                 }).join('');
@@ -2905,11 +3609,6 @@ Kembalikan HANYA JSON:
 
                 if (type === 'preference') {
                     UserMemory.addPreference(`${title}: ${summary}`, true);
-                } else if (type === 'research') {
-                    let rs = Storage.get('wb_research', []);
-                    rs.unshift({ id: generateId('rs'), title, summary, topic: 'Umum', updatedAt: Date.now() });
-                    Storage.set('wb_research', rs);
-                    ResearchUI.render();
                 } else {
                     let kb = Storage.get('wb_knowledge', []);
                     kb.unshift({ id: generateId('kb'), title, summary, type, updatedAt: Date.now() });
@@ -2938,54 +3637,8 @@ Kembalikan HANYA JSON:
             }
         };
 
-        const ResearchUI = {
-            render() {
-                const container = document.getElementById('research-grid');
-                if (!container) return;
-
-                const rs = Storage.get('wb_research', []);
-                if (rs.length === 0) {
-                    container.innerHTML = `<div class="col-span-2 card p-6 text-center text-xs text-brand-muted">Belum ada catatan riset realistis. Tambahkan catatan baru untuk memperkaya detail cerita.</div>`;
-                    return;
-                }
-
-                container.innerHTML = rs.map(r => `
-                <div class="card p-3.5 flex flex-col justify-between hover:border-brand-primary/40 transition text-xs">
-                    <div>
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-primary/10 text-brand-primary">${escapeHTML(r.topic || 'Riset')}</span>
-                            <button onclick="ResearchUI.deleteEntry('${r.id}')" class="text-brand-muted hover:text-red-600 p-0.5" title="Hapus">✕</button>
-                        </div>
-                        <h4 class="font-bold text-xs text-brand-text mb-1">${escapeHTML(r.title)}</h4>
-                        <p class="text-[11px] text-brand-text/80 leading-relaxed">${escapeHTML(r.summary)}</p>
-                    </div>
-                </div>`).join('');
-            },
-
-            showAddModal() {
-                document.getElementById('add-modal-title').textContent = "Tambah Catatan Riset Realistis";
-                const sel = document.getElementById('modal-item-type');
-                sel.innerHTML = `
-                    <option value="research">Catatan Riset / Realitas Prosedur</option>
-                `;
-                document.getElementById('modal-item-title').value = '';
-                document.getElementById('modal-item-summary').value = '';
-                document.getElementById('add-item-modal').classList.remove('hidden');
-            },
-
-            deleteEntry(id) {
-                if (confirm("Hapus catatan riset ini?")) {
-                    let rs = Storage.get('wb_research', []).filter(r => r.id !== id);
-                    Storage.set('wb_research', rs);
-                    this.render();
-                    UI.updateDataSummary();
-                    UI.showToast("Catatan riset dihapus.");
-                }
-            }
-        };
-
         // ============================================================================
-        // 9. UI NAVIGATION & WORKSPACE VIEW CONTROLLER
+        // 11. UI NAVIGATION & WORKSPACE VIEW CONTROLLER
         // ============================================================================
         const UI = {
             sidebarCollapsed: false,
@@ -3006,7 +3659,6 @@ Kembalikan HANYA JSON:
                 if (target) target.classList.remove('hidden');
                 State.ui.currentView = viewId;
 
-                // Active sidebar highlights
                 ['create', 'brainstorm', 'brain', 'research', 'library'].forEach(id => {
                     const btn = document.getElementById(`nav-${id}`);
                     if (btn) {
@@ -3019,7 +3671,7 @@ Kembalikan HANYA JSON:
                 if (viewId === 'brainstorm') Brainstorm.init();
                 if (viewId === 'create') this.renderHomeStoryList();
                 if (viewId === 'brain') WritingBrainUI.render();
-                if (viewId === 'research') ResearchUI.render();
+                if (viewId === 'research') ResearchEngine.init();
                 if (viewId === 'library') this.renderStoryLibrary();
 
                 this.toggleMobileSidebar(false);
@@ -3133,7 +3785,7 @@ Kembalikan HANYA JSON:
                 if (sEl) sEl.textContent = Storage.get('ceritametro_history', []).length;
                 if (bEl) bEl.textContent = Storage.get('wb_brainstorm_sessions', []).length;
                 if (kEl) kEl.textContent = Storage.get('wb_knowledge', []).length;
-                if (rEl) rEl.textContent = Storage.get('wb_research', []).length;
+                if (rEl) rEl.textContent = Storage.get('wb_research_history', []).length;
 
                 const lastB = Storage.get('wb_last_backup_time');
                 if (lEl) {
@@ -3241,7 +3893,7 @@ Kembalikan HANYA JSON:
                     Storage.set('ceritametro_history', hist);
                     this.renderHomeStoryList();
                     this.renderStoryLibrary();
-                    this.updateDataSummary();
+                    UI.updateDataSummary();
                     UI.showToast("Cerita dihapus dari arsip.");
                 }
             },
@@ -3407,7 +4059,7 @@ Kembalikan HANYA JSON:
         };
 
         // ============================================================================
-        // 10. APP INITIALIZATION LIFECYCLE
+        // 12. APP INITIALIZATION LIFECYCLE
         // ============================================================================
         document.addEventListener('DOMContentLoaded', () => {
             Storage.init();
@@ -3430,7 +4082,7 @@ Kembalikan HANYA JSON:
                 }
             });
 
-            console.log("CERITA METRO POP v2.2 (Desktop Workspace & Password-Protected Backup) Ready.");
+            console.log("CERITA METRO POP v2.3 (AI-Powered Internet Research Engine) Ready.");
         });
     </script>
 </body>
