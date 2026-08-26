@@ -1289,35 +1289,15 @@ TUGAS ANDA:
                 this.renderHistory();
             },
 
-            switchSubTab(tabName) {
-                ['direct', 'discovery', 'queue', 'history'].forEach(t => {
-                    const btn = document.getElementById(`rs-tab-${t}`);
-                    const panel = document.getElementById(`rs-panel-${t}`);
-                    if (btn && panel) {
-                        if (t === tabName) {
-                            btn.className = "px-2.5 py-1 rounded-lg bg-brand-primary text-white font-semibold";
-                            panel.classList.remove('hidden');
-                        } else {
-                            btn.className = "px-2.5 py-1 rounded-lg text-brand-muted hover:bg-brand-bg";
-                            panel.classList.add('hidden');
-                        }
-                    }
-                });
-                if (tabName === 'history') this.renderHistory();
-                if (tabName === 'queue') this.renderQueue();
-            },
-
             updateProgress(stepText, percent) {
                 const box = document.getElementById('rs-progress-box');
                 const stepEl = document.getElementById('rs-progress-step');
-                const pctEl = document.getElementById('rs-progress-percent');
                 const barEl = document.getElementById('rs-progress-bar');
 
                 if (box && stepEl) {
                     if (percent !== null) {
                         box.classList.remove('hidden');
                         stepEl.innerHTML = `<div class="loader-sm"></div><span>${escapeHTML(stepText)}</span>`;
-                        if (pctEl) pctEl.textContent = `${percent}%`;
                         if (barEl) barEl.style.width = `${percent}%`;
                     } else {
                         box.classList.add('hidden');
@@ -1531,11 +1511,12 @@ Kembalikan HANYA format JSON valid:
             async runDiscovery() {
                 if (this.isResearching) return;
                 this.isResearching = true;
-                const btn = document.getElementById('btn-run-discovery');
-                if (btn) btn.disabled = true;
-
-                const list = document.getElementById('rs-discovery-list');
-                if (list) list.innerHTML = `<div class="card p-8 text-center text-xs text-brand-primary flex items-center justify-center gap-2"><div class="loader-sm"></div><span>Menjelajahi internet untuk menemukan 3 wawasan baru...</span></div>`;
+                const resultContainer = document.getElementById('rs-direct-result');
+                if (resultContainer) {
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.innerHTML = `<div class="card p-8 text-center text-xs text-brand-primary flex flex-col items-center justify-center gap-3"><div class="loader-sm mx-auto w-6 h-6 border-3"></div><span>Menjelajahi internet untuk menemukan wawasan dan fenomena baru...</span></div>`;
+                    resultContainer.scrollIntoView({ behavior: 'smooth' });
+                }
 
                 const discoveryQueries = [
                     "unreliable narrator literary techniques",
@@ -1546,7 +1527,6 @@ Kembalikan HANYA format JSON valid:
                     "toko kelontong malam hari urban sociology"
                 ];
 
-                // Pick 2 random queries to explore
                 const shuffled = discoveryQueries.sort(() => 0.5 - Math.random()).slice(0, 2);
 
                 try {
@@ -1556,9 +1536,12 @@ Kembalikan HANYA format JSON valid:
                         allSources = allSources.concat(s);
                     }
 
+                    if (allSources.length === 0) {
+                        throw new Error("Tidak dapat terhubung ke sumber internet online saat ini.");
+                    }
+
                     const existingKnowledge = Storage.get('wb_knowledge', []);
                     const knowledgeBrief = existingKnowledge.slice(0, 6).map(k => `- ${k.title}`).join('\n');
-
                     const sourcePayload = allSources.slice(0, 4).map((s, idx) => `[SUMBER ${idx + 1}]:\nJudul: ${s.title}\nURL: ${s.url}\nCuplikan:\n${s.snippet}`).join('\n\n');
 
                     const prompt = `Anda adalah Discovery Engine "Realistic Metro-Pop Mystery".
@@ -1583,33 +1566,38 @@ Kembalikan HANYA JSON Array of Objects:
                     const results = await API.callJSON(prompt, true);
                     const discoveries = Array.isArray(results) ? results : [results];
 
-                    if (list) {
-                        list.innerHTML = discoveries.map((d, idx) => `
-                        <div class="card p-4 space-y-2.5 border-brand-primary/25 text-xs">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">DISCOVERY #${idx + 1}</span>
-                                    <h4 class="font-bold text-sm text-brand-text mt-1">${escapeHTML(d.topic)}</h4>
+                    if (resultContainer) {
+                        resultContainer.innerHTML = `
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center px-1">
+                                <h3 class="font-bold text-sm text-brand-text">Hasil Penjelajahan Wawasan Acak</h3>
+                                <button onclick="document.getElementById('rs-direct-result').classList.add('hidden')" class="text-xs text-brand-muted hover:text-brand-text">Tutup ✕</button>
+                            </div>
+                            ${discoveries.map((d, idx) => `
+                            <div class="card p-4 space-y-2 border-brand-primary/25 text-xs">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-brand-text">${escapeHTML(d.topic)}</h4>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Wawasan Baru</span>
                                 </div>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">VALUE: ${escapeHTML(d.writingValue || 'HIGH')}</span>
-                            </div>
-                            <p class="text-brand-text/85 leading-relaxed">${escapeHTML(d.summary)}</p>
-                            <p class="text-[11px] text-brand-muted"><strong>Potensi Cerita:</strong> ${escapeHTML(d.whyInteresting || d.writingApplications)}</p>
-                            <div class="flex justify-between items-center pt-2 border-t border-brand-primary/10">
-                                <a href="${escapeHTML(d.sourceUrl)}" target="_blank" class="text-[11px] text-brand-primary hover:underline">🔗 Sumber: ${escapeHTML(d.sourceTitle)} ↗</a>
-                                <button onclick="ResearchEngine.addDiscoveryToWritingBrain(${JSON.stringify(d).replace(/"/g, '&quot;')})" class="btn-primary px-3 py-1 rounded text-xs font-bold">+ Tambah ke Brain</button>
-                            </div>
-                        </div>`).join('');
+                                <p class="text-brand-text/85 leading-relaxed">${escapeHTML(d.summary)}</p>
+                                <p class="text-[11px] text-brand-muted"><strong>Potensi Cerita:</strong> ${escapeHTML(d.whyInteresting || d.writingApplications)}</p>
+                                <div class="flex justify-between items-center pt-2 border-t border-brand-primary/10">
+                                    <a href="${escapeHTML(d.sourceUrl)}" target="_blank" class="text-[11px] text-brand-primary hover:underline">🔗 Sumber: ${escapeHTML(d.sourceTitle || 'Wikipedia')} ↗</a>
+                                    <button onclick="ResearchEngine.addDiscoveryToWritingBrain(${JSON.stringify(d).replace(/"/g, '&quot;')})" class="btn-primary px-3 py-1 rounded text-xs font-bold">+ Simpan ke Gaya & Aturan</button>
+                                </div>
+                            </div>`).join('')}
+                        </div>`;
                     }
 
-                    UI.showToast("3 penemuan baru berhasil didapatkan!");
+                    UI.showToast("Penemuan wawasan baru berhasil didapatkan!");
 
                 } catch (e) {
                     console.error("Discovery error:", e);
-                    if (list) list.innerHTML = `<div class="card p-6 text-center text-xs text-red-500">Gagal melakukan discovery: ${escapeHTML(e.message)}</div>`;
+                    if (resultContainer) {
+                        resultContainer.innerHTML = `<div class="card p-5 text-center text-xs text-red-600 bg-red-50 border-red-200 space-y-1"><p class="font-bold">Gagal menjelajahi pengetahuan:</p><p>${escapeHTML(e.message)}</p></div>`;
+                    }
                 } finally {
                     this.isResearching = false;
-                    if (btn) btn.disabled = false;
                 }
             },
 
@@ -1720,9 +1708,6 @@ Kembalikan HANYA JSON Array of Objects:
             renderQueue() {
                 const queue = Storage.get('wb_research_queue', []);
                 const container = document.getElementById('rs-queue-list');
-                const countBadge = document.getElementById('queue-badge-count');
-
-                if (countBadge) countBadge.textContent = queue.length;
                 if (!container) return;
 
                 if (queue.length === 0) {
@@ -1746,13 +1731,11 @@ Kembalikan HANYA JSON Array of Objects:
             renderHistory() {
                 const history = Storage.get('wb_research_history', []);
                 const container = document.getElementById('rs-history-list');
-                const countEl = document.getElementById('rs-history-count');
 
-                if (countEl) countEl.textContent = `${history.length} laporan`;
                 if (!container) return;
 
                 if (history.length === 0) {
-                    container.innerHTML = `<div class="col-span-2 card p-6 text-center text-xs text-brand-muted">Belum ada laporan riset. Mulai riset pertamamu di tab Direct Research.</div>`;
+                    container.innerHTML = `<div class="col-span-2 card p-6 text-center text-xs text-brand-muted">Belum ada laporan riset. Mulai riset pertamamu di atas.</div>`;
                     return;
                 }
 
@@ -1778,9 +1761,13 @@ Kembalikan HANYA JSON Array of Objects:
             viewHistoricalReport(id) {
                 const report = Storage.get('wb_research_history', []).find(r => r.id === id);
                 if (!report) return;
-                this.switchSubTab('direct');
                 this.currentResult = report;
                 this.renderDirectResult(report);
+                const resEl = document.getElementById('rs-direct-result');
+                if (resEl) {
+                    resEl.classList.remove('hidden');
+                    resEl.scrollIntoView({ behavior: 'smooth' });
+                }
             },
 
             searchLocalKnowledgeFromQuery() {
@@ -3315,6 +3302,18 @@ Kembalikan HANYA JSON:
                 UI.showToast("Menulis cerpen utuh scene-driven (harap tunggu)...");
                 UI.navigateTo('result');
 
+                const titleEl = document.getElementById('story-title');
+                if (titleEl) titleEl.textContent = State.currentSession.title || 'Naskah Cerpen';
+                const ed = document.getElementById('story-content');
+                if (ed) {
+                    ed.innerHTML = `
+                    <div class="py-16 text-center space-y-3">
+                        <div class="loader-sm mx-auto w-6 h-6 border-3"></div>
+                        <p class="font-semibold text-brand-primary text-sm">Menulis naskah cerpen utuh scene-driven...</p>
+                        <p class="text-xs text-brand-muted">AI sedang merangkai alibi, interaksi fisik, dan alur misteri.</p>
+                    </div>`;
+                }
+
                 const outline = State.currentSession.storyOutline || {};
                 const prompt = `Tulis cerita pendek UTUH Realistic Metro-Pop Mystery berdasarkan outline ini:
 
@@ -3393,7 +3392,10 @@ HANYA string prompt bahasa Inggris tanpa tanda kutip.`;
             },
 
             saveToHistory(showToast = false) {
-                if (!State.currentSession.id || !State.currentSession.story) return;
+                if (!State.currentSession.id) return;
+                if (State.currentSession.story === undefined || State.currentSession.story === null) {
+                    State.currentSession.story = "";
+                }
                 let hist = Storage.get('ceritametro_history', []);
                 const idx = hist.findIndex(h => h.id === State.currentSession.id);
                 if (idx > -1) hist[idx] = { ...State.currentSession, updatedAt: Date.now() };
@@ -3714,6 +3716,7 @@ Kembalikan HANYA JSON:
                 if (viewId === 'brain') WritingBrainUI.render();
                 if (viewId === 'research') ResearchEngine.init();
                 if (viewId === 'library') this.renderStoryLibrary();
+                if (viewId === 'result') this.applyTitleFormat();
 
                 this.toggleMobileSidebar(false);
             },
@@ -4264,7 +4267,8 @@ Kembalikan HANYA JSON:
                     const range = box.targetRange;
                     range.deleteContents();
                     range.insertNode(document.createTextNode(newText));
-                    StoryEngine.saveToHistory();
+                    State.currentSession.story = UI.getStoryTextFromEditor();
+                    StoryEngine.saveToHistory(false);
                     UI.showToast('Teks berhasil diterapkan');
                 } catch(e) {
                     console.error(e);
