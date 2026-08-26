@@ -409,11 +409,18 @@
                         </div>
 
                         <!-- Tertiary CTA: Brainstorm First -->
-                        <div class="text-center pt-1">
-                            <button onclick="StoryEngine.startBrainstormFromHome()" class="text-xs text-brand-primary hover:underline font-medium inline-flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                Belum yakin dengan idemu? Diskusikan dulu di Brainstorming Partner →
-                            </button>
+                        <div class="text-center pt-1 space-y-1">
+                            <div>
+                                <button onclick="StoryEngine.startBlankStory()" class="text-xs text-brand-muted hover:text-brand-primary hover:underline font-medium inline-flex items-center gap-1">
+                                    atau langsung tulis di Editor naskah kosong &rarr;
+                                </button>
+                            </div>
+                            <div>
+                                <button onclick="StoryEngine.startBrainstormFromHome()" class="text-xs text-brand-primary hover:underline font-medium inline-flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    Belum yakin dengan idemu? Diskusikan dulu di Brainstorming Partner →
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -578,7 +585,7 @@
                         
                     </div>
 
-                    <article id="story-content" class="space-y-4 text-brand-text leading-[1.85] text-sm md:text-base font-normal">
+                    <article id="story-content" contenteditable="true" spellcheck="false" class="space-y-4 text-brand-text leading-[1.85] text-sm md:text-base font-normal focus:outline-none min-h-[350px] p-2 rounded-lg transition">
                         <!-- Story paragraphs injected via JS -->
                     </article>
 
@@ -3087,6 +3094,25 @@ Kembalikan HANYA JSON Array of Objects:
                 }
             },
 
+            startBlankStory() {
+                const idea = document.getElementById('m1-idea')?.value?.trim() || '';
+                const theme = document.getElementById('m1-theme')?.value || '';
+                State.resetSession();
+                State.currentSession.id = generateId('story');
+                State.currentSession.title = idea ? (idea.slice(0, 30) + (idea.length > 30 ? '...' : '')) : 'Naskah Cerpen Baru';
+                State.currentSession.userIdea = idea;
+                State.currentSession.theme = theme;
+                State.currentSession.story = '';
+                State.currentSession.storyOutline = { premise: idea, character: '', location: '', mystery: '', conflict: '', clues: '', reveal: '', ending: '' };
+                this.saveToHistory(false);
+                UI.renderResultStory();
+                UI.navigateTo('result');
+                setTimeout(() => {
+                    const el = document.getElementById('story-content');
+                    if (el) el.focus();
+                }, 100);
+            },
+
             async processMode1(method) {
                 const idea = document.getElementById('m1-idea').value.trim();
                 const theme = document.getElementById('m1-theme').value;
@@ -3574,6 +3600,24 @@ Kembalikan HANYA JSON:
             init() {
                 const savedCol = localStorage.getItem('wb_sidebar_collapsed');
                 if (savedCol === 'true') this.setSidebarCollapsed(true);
+
+                const ed = document.getElementById('story-content');
+                if (ed) {
+                    ed.addEventListener('focus', () => {
+                        const ph = ed.querySelector('[data-placeholder="true"]');
+                        if (ph) ed.innerHTML = '<p class="mb-3"><br></p>';
+                    });
+
+                    ed.addEventListener('input', () => {
+                        clearTimeout(StoryEngine._autoSaveTimer);
+                        StoryEngine._autoSaveTimer = setTimeout(() => {
+                            if (!State.currentSession.id) return;
+                            const text = UI.getStoryTextFromEditor();
+                            State.currentSession.story = text;
+                            StoryEngine.saveToHistory(false);
+                        }, 600);
+                    });
+                }
             },
 
             navigateTo(viewId) {
@@ -3933,6 +3977,20 @@ Kembalikan HANYA JSON:
                 if (acts) acts.classList.remove('hidden');
             },
 
+            getStoryTextFromEditor() {
+                const el = document.getElementById('story-content');
+                if (!el) return '';
+                const clone = el.cloneNode(true);
+                clone.querySelectorAll('.ai-suggestion-box').forEach(b => b.remove());
+                const paras = Array.from(clone.querySelectorAll('p'))
+                    .filter(p => !p.hasAttribute('data-placeholder'))
+                    .map(p => p.innerText.trim())
+                    .filter(t => t.length > 0);
+                if (paras.length > 0) return paras.join('\n\n');
+                const raw = clone.innerText.trim();
+                return raw.startsWith('Mulai tulis') ? '' : raw;
+            },
+
             renderResultStory() {
                 const s = State.currentSession;
                 const titleEl = document.getElementById('story-title');
@@ -3941,7 +3999,11 @@ Kembalikan HANYA JSON:
                 const contentEl = document.getElementById('story-content');
                 if (contentEl) {
                     const paragraphs = (s.story || '').split('\n\n').filter(p => p.trim() !== '');
-                    contentEl.innerHTML = paragraphs.map(p => `<p class="mb-3">${escapeHTML(p.trim())}</p>`).join('');
+                    if (paragraphs.length > 0) {
+                        contentEl.innerHTML = paragraphs.map(p => `<p class="mb-3">${escapeHTML(p.trim())}</p>`).join('');
+                    } else {
+                        contentEl.innerHTML = `<p class="mb-3 text-brand-muted/60 italic" data-placeholder="true">Mulai tulis naskah cerpenmu di sini, atau blok teks untuk meminta bantuan AI...</p>`;
+                    }
                 }
                 this.applyTitleFormat();
             },
@@ -4145,17 +4207,21 @@ Kembalikan HANYA JSON:
                 if (!box) return;
                 const text = box.querySelector('.ai-response-text').innerText;
                 
-                let knowledge = Storage.get('wb_knowledge', { settings: {}, custom_rules: [], research_knowledge: [] });
-                if (!knowledge.research_knowledge) knowledge.research_knowledge = [];
-                
-                knowledge.research_knowledge.push({
-                    id: 'rsh-' + Date.now(),
-                    content: text,
-                    date: new Date().toISOString()
-                });
-                
-                Storage.set('wb_knowledge', knowledge);
-                UI.showToast('Disimpan ke Pengetahuan Pribadi');
+                const kb = Storage.get('wb_knowledge', []);
+                const cleanSummary = text.replace(/<[^>]*>?/gm, '').trim();
+                const newEntry = {
+                    id: generateId('kb'),
+                    title: `Catatan Riset: ${cleanSummary.slice(0, 35).replace(/[\n\r]/g, ' ')}...`,
+                    summary: cleanSummary,
+                    type: 'research_knowledge',
+                    source: "Konteks Cerita / AI Research",
+                    updatedAt: Date.now()
+                };
+                kb.unshift(newEntry);
+                Storage.set('wb_knowledge', kb);
+                WritingBrainUI.render();
+                UI.updateDataSummary();
+                UI.showToast('Disimpan ke Writing Brain.');
                 box.remove();
             }
         };
